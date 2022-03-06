@@ -11,6 +11,7 @@ set(HEADER_FILES
 	include/idk/core/rectangle.inl
 	include/idk/core/vector2f.h
 	include/idk/core/vector2f.inl
+	include/idk/graphics/camera.h
 	include/idk/graphics/primitives_renderer.h
 	include/idk/graphics/shader.h
 	include/idk/graphics/sprite_renderer.h
@@ -26,6 +27,7 @@ set(SOURCE_FILES
 	src/core/matrix4.c
 	src/core/rectangle.c
 	src/core/vector2f.c
+	src/graphics/camera.c
 	src/graphics/primitives_renderer.c
 	src/graphics/shader.c
 	src/graphics/sprite_renderer.c

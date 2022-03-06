@@ -29,30 +29,33 @@ idk_tilemap_t *idk_tilemap_create(
                 &tilemap->tileset->textureRectangles[tileID];
             const idk_texture_t *texture = tilemap->tileset->texture;
 
-            const float l = textureRect->left / texture->width;
-            const float t = textureRect->top / texture->height;
-            const float r = l + (textureRect->width / texture->width);
-            const float b = t + (textureRect->height / texture->height);
-            const float vx = x * tilemap->tileset->tileWidth;
-            const float vy = y * tilemap->tileset->tileHeight;
+            const float tex_l = textureRect->left / texture->width;
+            const float tex_t = textureRect->top / texture->height;
+            const float tex_r = tex_l + (textureRect->width / texture->width);
+            const float tex_b = tex_t + (textureRect->height / texture->height);
+
+            const float tile_l = (x * tilemap->tileset->tileWidth);
+            const float tile_t = (y * tilemap->tileset->tileHeight);
+            const float tile_r = ((x * tilemap->tileset->tileWidth) + tilemap->tileset->tileWidth);
+            const float tile_b = ((y * tilemap->tileset->tileHeight) + tilemap->tileset->tileHeight);
 
             tilemap->vertices[vindex] = (idk_tile_vertex_t){
-                .posX = vx, .posY = vy, .texX = l, .texY = b};
+                .posX = tile_l, .posY = tile_b, .texX = tex_l, .texY = tex_b};
 
             tilemap->vertices[vindex + 1] = (idk_tile_vertex_t){
-                .posX = vx, .posY = vy, .texX = r, .texY = t};
+                .posX = tile_r, .posY = tile_t, .texX = tex_r, .texY = tex_t};
 
             tilemap->vertices[vindex + 2] = (idk_tile_vertex_t){
-                .posX = vx, .posY = vy, .texX = l, .texY = t};
+                .posX = tile_l, .posY = tile_t, .texX = tex_l, .texY = tex_t};
 
             tilemap->vertices[vindex + 3] = (idk_tile_vertex_t){
-                .posX = vx, .posY = vy, .texX = l, .texY = b};
+                .posX = tile_l, .posY = tile_b, .texX = tex_l, .texY = tex_b};
 
             tilemap->vertices[vindex + 4] = (idk_tile_vertex_t){
-                .posX = vx, .posY = vy, .texX = r, .texY = b};
+                .posX = tile_r, .posY = tile_b, .texX = tex_r, .texY = tex_b};
 
             tilemap->vertices[vindex + 5] = (idk_tile_vertex_t){
-                .posX = vx, .posY = vy, .texX = r, .texY = t};
+                .posX = tile_r, .posY = tile_t, .texX = tex_r, .texY = tex_t};
         }
     }
 
@@ -75,14 +78,8 @@ idk_tilemap_t *idk_tilemap_create(
 
 void idk_tilemap_destroy(idk_tilemap_t *tilemap)
 {
-
     glDeleteBuffers(1, &tilemap->vbo);
     glDeleteVertexArrays(1, &tilemap->vao);
     free(tilemap->vertices);
     free(tilemap);
-}
-
-void idk_tilemap_render(idk_tilemap_t *tilemap)
-{
-    //TODO: see sprite renderer code
 }

@@ -61,6 +61,18 @@ idk_mat4_t idk_matrix4_create2(
     };
 }
 
+idk_mat4_t idk_matrix4_copy(const idk_mat4_t *matrix)
+{
+    idk_mat4_t out;
+    idk_matrix4_copy_ref(matrix, &out);
+    return out;
+}
+
+void idk_matrix4_copy_ref(const idk_mat4_t *matrix, idk_mat4_t *out)
+{
+    memcpy(out, matrix, sizeof(idk_mat4_t));
+}
+
 void idk_matrix4_zero_ref(idk_mat4_t *matrix)
 {
     memset(matrix->data, 0, sizeof(float) * 16);
@@ -213,15 +225,6 @@ void idk_matrix4_orthographic(
     const float topBottom = 1.0f / (top - bottom);
     const float farNear =  -1.0f / (farZ - nearZ);
 
-    /*matrix->m00 = 2.0f * rightLeft;
-    matrix->m11 = 2.0f * topBottom;
-    matrix->m22 = 2.0f * farNear;
-
-    matrix->m03 = -(right + left) * rightLeft;
-    matrix->m13 = -(top + bottom) * topBottom;
-    matrix->m23 = (farZ + nearZ) * farNear;
-    matrix->m33 = 1.0f;*/
-
     matrix->m00 = 2.0f * rightLeft;
     matrix->m11 = 2.0f * topBottom;
     matrix->m22 = 2.0f * farNear;
@@ -230,4 +233,37 @@ void idk_matrix4_orthographic(
     matrix->m31 = -(top + bottom) * topBottom;
     matrix->m32 = (farZ + nearZ) * farNear;
     matrix->m33 = 1.0f;
+}
+
+idk_mat4_t idk_matrix4_get_inverse(const idk_mat4_t *matrix)
+{
+    idk_mat4_t out;
+    idk_matrix4_get_inverse_ref(matrix, &out);
+    return out;
+}
+
+void idk_matrix4_get_inverse_ref(const idk_mat4_t *matrix, idk_mat4_t *out)
+{
+    const float *m = matrix->data;
+    const float determinant = m[0] * (m[15] * m[5] - m[7] * m[13]) -
+                              m[1] * (m[15] * m[4] - m[7] * m[12]) +
+                              m[3] * (m[13] * m[4] - m[5] * m[12]);
+
+    if (determinant != 0.0f)
+    {
+        idk_matrix4_create2_ref(out,
+             (m[15] * m[5] - m[7] * m[13]) / determinant,
+            -(m[15] * m[4] - m[7] * m[12]) / determinant,
+             (m[13] * m[4] - m[5] * m[12]) / determinant,
+            -(m[15] * m[1] - m[3] * m[13]) / determinant,
+             (m[15] * m[0] - m[3] * m[12]) / determinant,
+            -(m[13] * m[0] - m[1] * m[12]) / determinant,
+             (m[7]  * m[1] - m[3] * m[5])  / determinant,
+            -(m[7]  * m[0] - m[3] * m[4])  / determinant,
+             (m[5]  * m[0] - m[1] * m[4])  / determinant);
+    }
+    else
+    {
+        idk_matrix4_identity_ref(out);
+    }
 }

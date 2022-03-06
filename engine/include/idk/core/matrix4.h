@@ -52,6 +52,9 @@ idk_mat4_t idk_matrix4_create2(
     const float m20, const float m21, const float m22
 );
 
+idk_mat4_t idk_matrix4_copy(const idk_mat4_t *matrix);
+void idk_matrix4_copy_ref(const idk_mat4_t *matrix, idk_mat4_t *out);
+
 void idk_matrix4_zero_ref(idk_mat4_t *matrix);
 void idk_matrix4_identity_ref(idk_mat4_t *matrix);
 void idk_matrix4_create_ref(
@@ -87,5 +90,8 @@ void idk_matrix4_transform_point2_ref(const idk_mat4_t *matrix, idk_vec2_t *poin
 void idk_matrix4_orthographic(
     idk_mat4_t *matrix, const float left, const float right,
     const float bottom, const float top, const float nearZ, const float farZ);
+
+idk_mat4_t idk_matrix4_get_inverse(const idk_mat4_t *matrix);
+void idk_matrix4_get_inverse_ref(const idk_mat4_t *matrix, idk_mat4_t *out);
 
 #endif

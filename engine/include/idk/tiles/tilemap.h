@@ -35,7 +35,4 @@ idk_tilemap_t *idk_tilemap_create(
 
 void idk_tilemap_destroy(idk_tilemap_t *tilemap);
 
-void idk_tilemap_render(idk_tilemap_t *tilemap);
-
-
 #endif
