@@ -91,6 +91,37 @@ IDK_TEST(CoreMatrix4Create2Test)
     return IDK_SUCCESS;
 }
 
+IDK_TEST(CoreMatrix4CopyTest)
+{
+    const idk_mat4_t expected = idk_matrix4_create(
+        1.0f, 0.0f, 0.0f, 7.0f,
+        2.0f, 0.0f, 6.0f, 8.0f,
+        3.0f, 5.0f, 0.0f, 9.0f,
+        4.0f, 0.0f, 0.0f, 10.0f
+    );
+    const idk_mat4_t actual = idk_matrix4_copy(&expected);
+
+    IDK_ASSERT(memcmp(&expected, &actual, sizeof(idk_mat4_t)) == 0);
+
+    return IDK_SUCCESS;
+}
+
+IDK_TEST(CoreMatrix4CopyRefTest)
+{
+    const idk_mat4_t expected = idk_matrix4_create(
+        1.0f, 0.0f, 0.0f, 7.0f,
+        2.0f, 0.0f, 6.0f, 8.0f,
+        3.0f, 5.0f, 0.0f, 9.0f,
+        4.0f, 0.0f, 0.0f, 10.0f
+    );
+    idk_mat4_t actual;
+    idk_matrix4_copy_ref(&expected, &actual);
+
+    IDK_ASSERT(memcmp(&expected, &actual, sizeof(idk_mat4_t)) == 0);
+
+    return IDK_SUCCESS;
+}
+
 IDK_TEST(CoreMatrix4ZeroRefTest)
 {
     const idk_mat4_t expected = (idk_mat4_t){
@@ -477,13 +508,77 @@ IDK_TEST(CoreMatrix4OrthographicTest)
     idk_mat4_t actual;
     idk_matrix4_orthographic(&actual, 0.0f, 800.0f, 600.0f, 0.0f, -1.0f, 1.0f);
 
-    for (uint32_t i = 0; i < 16; ++i)
-        printf("%1.5f, ", actual.data[i]);
-
     bool isEqual = true;
     for (uint32_t i = 0; i < 16; ++i)
     {
         if (!float_equals(actual.data[i], expected.data[i], 5))
+        {
+            isEqual = false;
+            break;
+        }
+    }
+
+    IDK_ASSERT(isEqual);
+
+    return IDK_SUCCESS;
+}
+
+IDK_TEST(CoreMatrix4GetInverseTest)
+{
+    const idk_mat4_t expected = idk_matrix4_create(
+        -0.400f,  0.500f,  0.000f,  0.100f,
+         0.500f, -0.750f,  0.000f,  0.250f,
+         0.000f,  0.000f,  1.000f,  0.000f,
+         0.100f,  0.250f,  0.000f, -0.150f
+    );
+
+    idk_mat4_t actual = idk_matrix4_create(
+        1.0f, 2.0f, 3.0f, 4.0f,
+        2.0f, 1.0f, 2.0f, 3.0f, 
+        3.0f, 2.0f, 1.0f, 2.0f,
+        4.0f, 3.0f, 2.0f, 1.0f
+    );
+
+    actual = idk_matrix4_get_inverse(&actual);
+
+    bool isEqual = true;
+    for (uint32_t i = 0; i < 16; ++i)
+    {
+        if (!float_equals(actual.data[i], expected.data[i], 6))
+        {
+            isEqual = false;
+            break;
+        }
+    }
+
+    IDK_ASSERT(isEqual);
+
+    return IDK_SUCCESS;
+}
+
+IDK_TEST(CoreMatrix4GetInverseRefTest)
+{
+    const idk_mat4_t expected = idk_matrix4_create(
+        -0.400f,  0.500f,  0.000f,  0.100f,
+         0.500f, -0.750f,  0.000f,  0.250f,
+         0.000f,  0.000f,  1.000f,  0.000f,
+         0.100f,  0.250f,  0.000f, -0.150f
+    );
+
+    const idk_mat4_t input = idk_matrix4_create(
+        1.0f, 2.0f, 3.0f, 4.0f,
+        2.0f, 1.0f, 2.0f, 3.0f, 
+        3.0f, 2.0f, 1.0f, 2.0f,
+        4.0f, 3.0f, 2.0f, 1.0f
+    );
+
+    idk_mat4_t actual;
+    idk_matrix4_get_inverse_ref(&input, &actual);
+
+    bool isEqual = true;
+    for (uint32_t i = 0; i < 16; ++i)
+    {
+        if (!float_equals(actual.data[i], expected.data[i], 6))
         {
             isEqual = false;
             break;
@@ -504,6 +599,8 @@ IDK_TEST(CoreMatrix4OrthographicTest)
         CoreMatrix4ScaleTest, CoreMatrix4Scale2Test,                          \
         CoreMatrix4TranslateTest, CoreMatrix4Translate2Test,                  \
         CoreMatrix4TransformPointTest, CoreMatrix4TransformPointRefTest,      \
-        CoreMatrix4TransformPoint2RefTest, CoreMatrix4OrthographicTest
+        CoreMatrix4TransformPoint2RefTest, CoreMatrix4OrthographicTest,       \
+        CoreMatrix4GetInverseTest, CoreMatrix4GetInverseRefTest,              \
+        CoreMatrix4CopyTest, CoreMatrix4CopyRefTest
 
 #endif
