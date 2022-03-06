@@ -53,6 +53,7 @@ idk_window_t *idk_window_create(
     if (!glfwInit())
     {
         LOG("Couldn't initialize GLFW.\n");
+        free(window);
         return NULL;
     }
     
@@ -71,6 +72,7 @@ idk_window_t *idk_window_create(
         LOG("Couldn't initialize GLAD.\n");
         glfwDestroyWindow(window->window);
         glfwTerminate();
+        free(window);
         return NULL;
     }
 
