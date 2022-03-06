@@ -50,3 +50,9 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# VS Directory
+.vs/
+
+# Bin Directory
+out/
