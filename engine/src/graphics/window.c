@@ -21,6 +21,7 @@ static void idk_mouse_button_callback(
 
 typedef struct idk_window
 {
+    idk_camera_t camera;
     uint32_t previousKeys[16];
     uint32_t keys[16];
     GLFWgamepadstate previousGamepadState;
@@ -39,6 +40,9 @@ idk_window_t *idk_window_create(
     const uint32_t width, const uint32_t height, const char *title)
 {
     idk_window_t *window = malloc(sizeof(idk_window_t));
+    window->camera = idk_camera_create(
+        (idk_vec2_t){width / 2.0f, height / 2.0f},
+        (idk_vec2_t){width, height});
     window->width = width;
     window->height = height;
     window->deltaTime = 0.0f;
@@ -154,6 +158,50 @@ void idk_window_display(idk_window_t *window)
 float idk_window_get_dt(idk_window_t *window)
 {
     return window->deltaTime;
+}
+
+idk_camera_t *idk_window_get_camera(idk_window_t *window)
+{
+    return &window->camera;
+}
+
+idk_vec2_t idk_window_map_pixel_to_coords(
+    idk_window_t *window, const idk_vec2_t point)
+{
+    idk_camera_t *cam = &window->camera;
+    const idk_rect_t vp = idk_rectangle_create(
+        floorf(0.5f + window->width * cam->viewport.left),
+        floorf(0.5f + window->height * cam->viewport.top),
+        floorf(0.5f + window->width * cam->viewport.width),
+        floorf(0.5f + window->height * cam->viewport.height));
+
+    idk_vec2_t normalized = {
+        .x = -1.f + 2.f * (point.x - vp.left) / vp.width,
+        .y = 1.f - 2.f * (point.y - vp.top) / vp.height};
+
+    idk_mat4_t inverseMatrix;
+    idk_camera_get_inverse_transform_matrix(cam, &inverseMatrix);
+    return idk_matrix4_transform_point(&inverseMatrix, normalized);
+}
+
+idk_vec2_t idk_window_map_coords_to_pixel(
+    idk_window_t *window, const idk_vec2_t point)
+{
+    idk_camera_t *cam = &window->camera;
+    idk_mat4_t matrix;
+    idk_camera_get_transform_matrix(cam, &matrix);
+
+    const idk_vec2_t normalized = idk_matrix4_transform_point(&matrix, point);
+
+    const idk_rect_t vp = idk_rectangle_create(
+        floorf(0.5f + window->width * cam->viewport.left),
+        floorf(0.5f + window->height * cam->viewport.top),
+        floorf(0.5f + window->width * cam->viewport.width),
+        floorf(0.5f + window->height * cam->viewport.height));
+
+    return (idk_vec2_t){
+        .x = (normalized.x + 1.f) / 2.f * vp.width + vp.left,
+        .y = (-normalized.y + 1.f) / 2.f * vp.height + vp.top};
 }
 
 void idk_window_set_clear_color(idk_window_t *window, const idk_color_t color)

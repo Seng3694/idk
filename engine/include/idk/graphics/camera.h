@@ -20,13 +20,11 @@ typedef struct idk_camera
     bool inverseTransformNeedsUpdate;
 } idk_camera_t;
 
-idk_camera_t idk_camera_create(const idk_vec2_t center, const idk_vec2_t size, const idk_vec2_t windowSize);
+idk_camera_t idk_camera_create(const idk_vec2_t center, const idk_vec2_t size);
 
 void idk_camera_set_center(idk_camera_t *camera, const idk_vec2_t center);
 void idk_camera_set_size(idk_camera_t *camera, const idk_vec2_t size);
 void idk_camera_set_rotation(idk_camera_t *camera, const float rotation);
-void idk_camera_set_window_size(
-    idk_camera_t *camera, const idk_vec2_t windowSize);
 void idk_camera_reset(idk_camera_t *camera, const idk_rect_t rect);
 
 void idk_camera_move(idk_camera_t *camera, const idk_vec2_t offset);
@@ -38,10 +36,5 @@ void idk_camera_get_transform_matrix(
 
 void idk_camera_get_inverse_transform_matrix(
     idk_camera_t *camera, idk_mat4_t *outMatrix);
-
-idk_vec2_t idk_camera_map_pixel_to_coords(
-    idk_camera_t *camera, const idk_vec2_t point);
-idk_vec2_t idk_camera_map_coords_to_pixel(
-    idk_camera_t *camera, const idk_vec2_t point);
 
 #endif
