@@ -14,16 +14,19 @@ typedef struct idk_camera
     idk_rect_t viewport;
     idk_vec2_t center;
     idk_vec2_t size;
+    idk_vec2_t windowSize;
     float rotation;
     bool transformNeedsUpdate;
     bool inverseTransformNeedsUpdate;
 } idk_camera_t;
 
-idk_camera_t idk_camera_create(const idk_vec2_t center, const idk_vec2_t size);
+idk_camera_t idk_camera_create(const idk_vec2_t center, const idk_vec2_t size, const idk_vec2_t windowSize);
 
 void idk_camera_set_center(idk_camera_t *camera, const idk_vec2_t center);
 void idk_camera_set_size(idk_camera_t *camera, const idk_vec2_t size);
 void idk_camera_set_rotation(idk_camera_t *camera, const float rotation);
+void idk_camera_set_window_size(
+    idk_camera_t *camera, const idk_vec2_t windowSize);
 void idk_camera_reset(idk_camera_t *camera, const idk_rect_t rect);
 
 void idk_camera_move(idk_camera_t *camera, const idk_vec2_t offset);

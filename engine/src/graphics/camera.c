@@ -3,13 +3,16 @@
 
 static void idk_camera_update_transform_matrix(idk_camera_t *camera);
 
-idk_camera_t idk_camera_create(const idk_vec2_t center, const idk_vec2_t size)
+idk_camera_t idk_camera_create(
+    const idk_vec2_t center, const idk_vec2_t size,
+    const idk_vec2_t windowSize)
 {
     return (idk_camera_t){
         .center = center,
         .size = size,
+        .windowSize = windowSize,
         .rotation = 0.0f,
-        .viewport = {.left = 0.0f, .top = 0.0f, .width = 1.0f, .height = 0.0f},
+        .viewport = {.left = 0.0f, .top = 0.0f, .width = 1.0f, .height = 1.0f},
         .transformNeedsUpdate = true,
         .inverseTransformNeedsUpdate = true};
 }
@@ -33,6 +36,12 @@ void idk_camera_set_rotation(idk_camera_t *camera, const float rotation)
     camera->rotation = rotation;
     camera->transformNeedsUpdate = true;
     camera->inverseTransformNeedsUpdate = true;
+}
+
+void idk_camera_set_window_size(
+    idk_camera_t *camera, const idk_vec2_t windowSize)
+{
+    camera->windowSize = windowSize;
 }
 
 void idk_camera_reset(idk_camera_t *camera, const idk_rect_t rect)
@@ -108,7 +117,12 @@ static void idk_camera_update_transform_matrix(idk_camera_t *camera)
 idk_vec2_t idk_camera_map_pixel_to_coords(
     idk_camera_t *camera, const idk_vec2_t point)
 {
-    const idk_rect_t vp = camera->viewport;
+    const idk_rect_t vp = idk_rectangle_create(
+        floorf(0.5f + camera->windowSize.x * camera->viewport.left), 
+        floorf(0.5f + camera->windowSize.y * camera->viewport.top),
+        floorf(0.5f + camera->windowSize.x * camera->viewport.width),
+        floorf(0.5f + camera->windowSize.y * camera->viewport.height)
+        );
     idk_vec2_t normalized = {
         .x = -1.f + 2.f * (point.x - vp.left) / vp.width,
         .y = 1.f - 2.f * (point.y - vp.top) / vp.height};
@@ -126,7 +140,12 @@ idk_vec2_t idk_camera_map_coords_to_pixel(
 
     const idk_vec2_t normalized = idk_matrix4_transform_point(&matrix, point);
 
-    const idk_rect_t vp = camera->viewport;
+    const idk_rect_t vp = idk_rectangle_create(
+        floorf(0.5f + camera->windowSize.x * camera->viewport.left),
+        floorf(0.5f + camera->windowSize.y * camera->viewport.top),
+        floorf(0.5f + camera->windowSize.x * camera->viewport.width),
+        floorf(0.5f + camera->windowSize.y * camera->viewport.height));
+
     return (idk_vec2_t){
         .x = (normalized.x + 1.f) / 2.f * vp.width + vp.left,
         .y = (-normalized.y + 1.f) / 2.f * vp.height + vp.top};
