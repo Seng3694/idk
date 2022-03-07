@@ -5,11 +5,11 @@
 #include "idk/core/rectangle.h"
 #include "idk/core/vector2f.h"
 #include "idk/graphics/texture.h"
+#include "idk/graphics/window.h"
 
 typedef struct idk_sprite_renderer idk_sprite_renderer_t;
 
-idk_sprite_renderer_t *idk_sprite_renderer_create(
-    const uint32_t width, const uint32_t height);
+idk_sprite_renderer_t *idk_sprite_renderer_create(idk_window_t *window);
 void idk_sprite_renderer_destroy(idk_sprite_renderer_t *renderer);
 
 void idk_sprite_renderer_draw(

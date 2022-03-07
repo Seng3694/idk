@@ -2,52 +2,45 @@
 #include "idk/graphics/shader.h"
 #include "idk/core/common.h"
 #include "idk/core/matrix4.h"
+#include "idk/core/file_system.h"
 
 #include <glad/glad.h>
 #include <stdlib.h>
 
 typedef struct idk_sprite_renderer
 {
+    idk_window_t *window;
     idk_shader_t shader;
     uint32_t vao;
     uint32_t vbo;
 } idk_sprite_renderer_t;
 
-static const char *spriteVertShader = GLSL(
-    "330 core",
-    layout(location = 0) in vec4 vertex; // <vec2 position, vec2 texCoords>
-
-    out vec2 TexCoords;
-
-    uniform mat4 model; uniform mat4 projection;
-
-    void main() {
-        TexCoords = vertex.zw;
-        gl_Position = projection * model * vec4(vertex.xy, 0.0, 1.0);
-    });
-
-static const char *spriteFragShader = GLSL(
-    "330 core", in vec2 TexCoords; out vec4 color;
-
-    uniform sampler2D image; uniform vec4 spriteColor;
-
-    void main() { color = spriteColor * texture(image, TexCoords); });
-
-idk_sprite_renderer_t *idk_sprite_renderer_create(
-    const uint32_t width, const uint32_t height)
+idk_sprite_renderer_t *idk_sprite_renderer_create(idk_window_t* window)
 {
     idk_sprite_renderer_t *renderer = malloc(sizeof(idk_sprite_renderer_t));
+    renderer->window = window;
 
-    renderer->shader =
-        idk_shader_create_vf(spriteVertShader, spriteFragShader);
+    char *vertShaderCode = NULL;
+    if(!idk_file_system_load_file_string("content/shaders/sprite.vert", &vertShaderCode))
+    {
+        free(renderer);
+        return NULL;
+    }
 
-    idk_mat4_t projection;
-    idk_matrix4_orthographic(
-        &projection, 0.0f, (float)width, (float)height, 0.0f, -1.0f, 1.0f);
+    char *fragShaderCode = NULL;
+    if(!idk_file_system_load_file_string("content/shaders/sprite.frag", &fragShaderCode))
+    {
+        free(renderer);
+        return NULL;
+    }
+
+    renderer->shader = idk_shader_create_vf(vertShaderCode, fragShaderCode);
+
+    free(vertShaderCode);
+    free(fragShaderCode);
 
     idk_shader_use(renderer->shader);
-    idk_shader_set_integer(renderer->shader, "image", 0);
-    idk_shader_set_matrix4(renderer->shader, "projection", &projection);
+    idk_shader_set_integer(renderer->shader, "u_Image", 0);
 
     float vertices[] = {// pos      // tex
                         0.0f, 1.0f, 0.0f, 1.0f, 
@@ -65,9 +58,13 @@ idk_sprite_renderer_t *idk_sprite_renderer_create(
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     glBindVertexArray(renderer->vao);
+
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(
-        0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *)0);
+    glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (void *)0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (void *)(2 * sizeof(float)));
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
@@ -95,9 +92,16 @@ void idk_sprite_renderer_draw(
 
     idk_matrix4_scale2(&model, size);
 
+    idk_camera_t *cam = idk_window_get_camera(renderer->window);
+    idk_mat4_t view;
+    idk_camera_get_transform_matrix(cam, &view);
+
+    idk_mat4_t modelView;
+    idk_matrix4_combine(view, model, &modelView);
+
     idk_shader_use(renderer->shader);
-    idk_shader_set_matrix4(renderer->shader, "model", &model);
-    idk_shader_set_color(renderer->shader, "spriteColor", color);
+    idk_shader_set_matrix4(renderer->shader, "u_ModelView", &modelView);
+    idk_shader_set_color(renderer->shader, "u_Color", color);
 
     glActiveTexture(GL_TEXTURE0);
     idk_texture_bind(texture);

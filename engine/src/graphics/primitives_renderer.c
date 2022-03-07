@@ -1,3 +1,4 @@
+#include "idk/core/file_system.h"
 #include "idk/core/matrix4.h"
 #include "idk/graphics/primitives_renderer.h"
 #include "idk/graphics/shader.h"
@@ -35,33 +36,37 @@
 
 typedef struct idk_primitives_renderer
 {
+    idk_window_t *window;
     idk_shader_t shader;
     uint32_t vao;
     uint32_t vbo;
 } idk_primitives_renderer_t;
 
-static const char *vertSource =
-    "#version 330 core\n"
-    "layout (location=0) in vec2 position;\n"
-    "uniform mat4 projection;\n"
-    "void main()\n"
-    "{\n"
-    "   gl_Position = projection * vec4(position.xy, 0.0, 1.0);\n"
-    "}\n";
-
-static const char *fragSource = 
-    "#version 330 core\n"
-    "out vec4 color;\n"
-    "uniform vec4 primitiveColor;\n"
-    "void main()\n"
-    "{\n"
-    "  color = primitiveColor;\n"
-    "}\n";
-
-idk_primitives_renderer_t *idk_primitives_renderer_create(
-    const uint32_t screenWidth, const uint32_t screenHeight)
+idk_primitives_renderer_t *idk_primitives_renderer_create(idk_window_t *window)
 {
     idk_primitives_renderer_t *renderer = malloc(sizeof(idk_primitives_renderer_t));
+    renderer->window = window;
+
+    char *vertShaderCode = NULL;
+    if (!idk_file_system_load_file_string(
+            "content/shaders/prim.vert", &vertShaderCode))
+    {
+        free(renderer);
+        return NULL;
+    }
+
+    char *fragShaderCode = NULL;
+    if (!idk_file_system_load_file_string(
+            "content/shaders/prim.frag", &fragShaderCode))
+    {
+        free(renderer);
+        return NULL;
+    }
+
+    renderer->shader = idk_shader_create_vf(vertShaderCode, fragShaderCode);
+
+    free(vertShaderCode);
+    free(fragShaderCode);
 
     glGenVertexArrays(1, &renderer->vao);
     glGenBuffers(1, &renderer->vbo);
@@ -77,18 +82,6 @@ idk_primitives_renderer_t *idk_primitives_renderer_create(
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    renderer->shader = idk_shader_create_vf(vertSource, fragSource);
-
-    idk_mat4_t projection;
-    idk_matrix4_orthographic(
-        &projection, 0.0f, (float)screenWidth, (float)screenHeight, 0.0f,
-        -1.0f,
-        1.0f);
-
-    idk_shader_use(renderer->shader);
-    idk_shader_set_matrix4(renderer->shader, "projection", &projection);
-
-    glUseProgram(0);
     idk_primitives_renderer_set_color2(renderer, 255, 255, 255, 255);
 
     return renderer;
@@ -107,7 +100,7 @@ void idk_primitives_renderer_set_color(
 {
     glUseProgram(renderer->shader);
     glUniform4fv(
-        glGetUniformLocation(renderer->shader, "primitiveColor"), 1,
+        glGetUniformLocation(renderer->shader, "u_Color"), 1,
         (float[]){r, g, b, a});
     glUseProgram(0);
 }
@@ -134,7 +127,13 @@ void idk_draw_point(
     glBufferSubData(
         GL_ARRAY_BUFFER, POINT_OFFSET * VERTEX_SIZE,
         POINT_VERTEX_COUNT * VERTEX_SIZE, vertices);
-    glUseProgram(renderer->shader);
+
+    idk_shader_use(renderer->shader);
+    idk_camera_t *cam = idk_window_get_camera(renderer->window);
+    idk_mat4_t view;
+    idk_camera_get_transform_matrix(cam, &view);
+    idk_shader_set_matrix4(renderer->shader, "u_ModelView", &view);
+
     glDrawArrays(GL_POINTS, POINT_OFFSET, POINT_VERTEX_COUNT);
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -151,7 +150,13 @@ void idk_draw_line(
     glBufferSubData(
         GL_ARRAY_BUFFER, LINE_OFFSET * VERTEX_SIZE,
         LINE_VERTEX_COUNT * VERTEX_SIZE, vertices);
-    glUseProgram(renderer->shader);
+    
+    idk_shader_use(renderer->shader);
+    idk_camera_t *cam = idk_window_get_camera(renderer->window);
+    idk_mat4_t view;
+    idk_camera_get_transform_matrix(cam, &view);
+    idk_shader_set_matrix4(renderer->shader, "u_ModelView", &view);
+
     glDrawArrays(GL_LINES, LINE_OFFSET, LINE_VERTEX_COUNT);
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -185,7 +190,13 @@ void idk_draw_triangle_fill(
     glBufferSubData(
         GL_ARRAY_BUFFER, TRIANGLE_OFFSET * VERTEX_SIZE,
         TRIANGLE_VERTEX_COUNT * VERTEX_SIZE, vertices);
-    glUseProgram(renderer->shader);
+
+    idk_shader_use(renderer->shader);
+    idk_camera_t *cam = idk_window_get_camera(renderer->window);
+    idk_mat4_t view;
+    idk_camera_get_transform_matrix(cam, &view);
+    idk_shader_set_matrix4(renderer->shader, "u_ModelView", &view);
+
     glDrawArrays(GL_TRIANGLES, TRIANGLE_OFFSET, TRIANGLE_VERTEX_COUNT);
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -210,7 +221,13 @@ void idk_draw_rectangle2(
     glBufferSubData(
         GL_ARRAY_BUFFER, RECTANGLE_OFFSET * VERTEX_SIZE,
         RECTANGLE_VERTEX_COUNT * VERTEX_SIZE, vertices);
-    glUseProgram(renderer->shader);
+
+    idk_shader_use(renderer->shader);
+    idk_camera_t *cam = idk_window_get_camera(renderer->window);
+    idk_mat4_t view;
+    idk_camera_get_transform_matrix(cam, &view);
+    idk_shader_set_matrix4(renderer->shader, "u_ModelView", &view);
+
     glDrawArrays(GL_LINE_LOOP, RECTANGLE_OFFSET, RECTANGLE_VERTEX_COUNT);
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -234,7 +251,13 @@ void idk_draw_rectangle2_fill(
     glBufferSubData(
         GL_ARRAY_BUFFER, RECTANGLE_FILL_OFFSET * VERTEX_SIZE,
         RECTANGLE_FILL_VERTEX_COUNT * VERTEX_SIZE, vertices);
-    glUseProgram(renderer->shader);
+
+    idk_shader_use(renderer->shader);
+    idk_camera_t *cam = idk_window_get_camera(renderer->window);
+    idk_mat4_t view;
+    idk_camera_get_transform_matrix(cam, &view);
+    idk_shader_set_matrix4(renderer->shader, "u_ModelView", &view);
+    
     glDrawArrays(
         GL_TRIANGLES, RECTANGLE_FILL_OFFSET, RECTANGLE_FILL_VERTEX_COUNT);
     glBindVertexArray(0);
@@ -264,12 +287,19 @@ void idk_draw_circle(
     glBufferSubData(
         GL_ARRAY_BUFFER, CIRCLE_OFFSET * VERTEX_SIZE,
         CIRCLE_VERTEX_COUNT * VERTEX_SIZE, vertices);
-    glUseProgram(renderer->shader);
+
+    idk_shader_use(renderer->shader);
+    idk_camera_t *cam = idk_window_get_camera(renderer->window);
+    idk_mat4_t view;
+    idk_camera_get_transform_matrix(cam, &view);
+    idk_shader_set_matrix4(renderer->shader, "u_ModelView", &view);
+    
     glDrawArrays(GL_LINE_LOOP, CIRCLE_OFFSET, CIRCLE_VERTEX_COUNT);
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glUseProgram(0);
 }
+
 void idk_draw_circle_fill(
     idk_primitives_renderer_t *renderer, const float x, const float y,
     const float radius)
@@ -290,7 +320,13 @@ void idk_draw_circle_fill(
     glBufferSubData(
         GL_ARRAY_BUFFER, CIRCLE_FILL_OFFSET * VERTEX_SIZE,
         CIRCLE_FILL_VERTEX_COUNT * VERTEX_SIZE, vertices);
-    glUseProgram(renderer->shader);
+
+    idk_shader_use(renderer->shader);
+    idk_camera_t *cam = idk_window_get_camera(renderer->window);
+    idk_mat4_t view;
+    idk_camera_get_transform_matrix(cam, &view);
+    idk_shader_set_matrix4(renderer->shader, "u_ModelView", &view);
+    
     glDrawArrays(
         GL_TRIANGLE_FAN, CIRCLE_FILL_OFFSET, CIRCLE_FILL_VERTEX_COUNT);
     glBindVertexArray(0);

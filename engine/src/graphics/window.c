@@ -165,6 +165,11 @@ idk_camera_t *idk_window_get_camera(idk_window_t *window)
     return &window->camera;
 }
 
+idk_vec2_t idk_window_get_size(const idk_window_t *window)
+{
+    return (idk_vec2_t){window->width, window->height};
+}
+
 idk_vec2_t idk_window_map_pixel_to_coords(
     idk_window_t *window, const idk_vec2_t point)
 {

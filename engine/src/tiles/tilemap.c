@@ -68,7 +68,10 @@ idk_tilemap_t *idk_tilemap_create(
         GL_ARRAY_BUFFER, totalVertexSize, tilemap->vertices, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(idk_tile_vertex_t), (void *)0);
+    glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(idk_tile_vertex_t), (void *)0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(idk_tile_vertex_t), (void *)(2 * sizeof(float)));
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);

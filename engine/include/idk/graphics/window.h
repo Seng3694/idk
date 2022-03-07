@@ -27,6 +27,7 @@ void idk_window_set_cursor_visibility(
 
 float idk_window_get_dt(idk_window_t *window);
 idk_camera_t *idk_window_get_camera(idk_window_t *window);
+idk_vec2_t idk_window_get_size(const idk_window_t *window);
 
 idk_vec2_t idk_window_map_pixel_to_coords(
     idk_window_t *window, const idk_vec2_t point);

@@ -3,11 +3,11 @@
 
 #include <stdint.h>
 #include "idk/core/color.h"
+#include "idk/graphics/window.h"
 
 typedef struct idk_primitives_renderer idk_primitives_renderer_t;
 
-idk_primitives_renderer_t *idk_primitives_renderer_create(
-    const uint32_t screenWidth, const uint32_t screenHeight);
+idk_primitives_renderer_t *idk_primitives_renderer_create(idk_window_t *window);
 void idk_primitives_renderer_destroy(idk_primitives_renderer_t *renderer);
 
 void idk_primitives_renderer_set_color(
