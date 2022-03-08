@@ -3,6 +3,7 @@ set(HEADER_FILES
 	core/color_tests.h
 	core/file_system_tests.h
 	core/matrix4_tests.h
+	core/rectangle_tests.h
 	core/vector2f_tests.h
 	graphics/shader_tests.h
 	graphics/window_tests.h
