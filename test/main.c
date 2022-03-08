@@ -6,13 +6,14 @@
 #include "core/vector2f_tests.h"
 #include "graphics/shader_tests.h"
 #include "graphics/window_tests.h"
+#include "tiles/tileset_tests.h"
 
 IDK_MAIN(
 	CoreColorTests, 
 	CoreVector2fTests, 
     CoreMatrix4Tests,
     CoreFileSystemTests,
-	CoreRectangleTests
+	CoreRectangleTests,
     //GraphicsShaderTests
 	//GraphicsWindowTests
-);
+    TilesTilesetTests);

@@ -7,6 +7,7 @@ set(HEADER_FILES
 	core/vector2f_tests.h
 	graphics/shader_tests.h
 	graphics/window_tests.h
+	tiles/tileset_tests.h
 )
 
 set(SOURCE_FILES
