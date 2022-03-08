@@ -10,7 +10,6 @@
 typedef struct idk_sprite_renderer
 {
     idk_window_t *window;
-    idk_shader_t shader;
     uint32_t vao;
     uint32_t vbo;
 } idk_sprite_renderer_t;
@@ -19,28 +18,6 @@ idk_sprite_renderer_t *idk_sprite_renderer_create(idk_window_t* window)
 {
     idk_sprite_renderer_t *renderer = malloc(sizeof(idk_sprite_renderer_t));
     renderer->window = window;
-
-    char *vertShaderCode = NULL;
-    if(!idk_file_system_load_file_string("content/shaders/sprite.vert", &vertShaderCode))
-    {
-        free(renderer);
-        return NULL;
-    }
-
-    char *fragShaderCode = NULL;
-    if(!idk_file_system_load_file_string("content/shaders/sprite.frag", &fragShaderCode))
-    {
-        free(renderer);
-        return NULL;
-    }
-
-    renderer->shader = idk_shader_create_vf(vertShaderCode, fragShaderCode);
-
-    free(vertShaderCode);
-    free(fragShaderCode);
-
-    idk_shader_use(renderer->shader);
-    idk_shader_set_integer(renderer->shader, "u_Image", 0);
 
     float vertices[] = {// pos      // tex
                         0.0f, 1.0f, 0.0f, 1.0f, 
@@ -73,7 +50,6 @@ idk_sprite_renderer_t *idk_sprite_renderer_create(idk_window_t* window)
 
 void idk_sprite_renderer_destroy(idk_sprite_renderer_t *renderer)
 {
-    idk_shader_destroy(renderer->shader);
     glDeleteBuffers(1, &renderer->vbo);
     glDeleteVertexArrays(1, &renderer->vao);
     free(renderer);
@@ -83,7 +59,7 @@ void idk_sprite_renderer_draw(
     idk_sprite_renderer_t *renderer, const idk_texture_t *texture,
     const idk_rect_t textureRect, const idk_vec2_t position,
     const idk_vec2_t origin, const idk_vec2_t size, const float rotate,
-    const idk_color_t color)
+    const idk_color_t color, idk_render_states_t renderStates)
 {
     idk_mat4_t model = idk_matrix4_identity();
     idk_matrix4_translate2(&model, position);
@@ -99,9 +75,14 @@ void idk_sprite_renderer_draw(
     idk_mat4_t modelView;
     idk_matrix4_combine(view, model, &modelView);
 
-    idk_shader_use(renderer->shader);
-    idk_shader_set_matrix4(renderer->shader, "u_ModelView", &modelView);
-    idk_shader_set_color(renderer->shader, "u_Color", color);
+    idk_mat4_t transform;
+    idk_matrix4_combine(modelView, renderStates.currentMatrix, &transform);
+
+    idk_shader_use(renderStates.currentShader);
+    idk_shader_set_integer(renderStates.currentShader, "u_Image", 0);
+    idk_shader_set_matrix4(
+        renderStates.currentShader, "u_ModelView", &transform);
+    idk_shader_set_color(renderStates.currentShader, "u_Color", color);
 
     glActiveTexture(GL_TEXTURE0);
     idk_texture_bind(texture);

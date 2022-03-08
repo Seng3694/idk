@@ -60,6 +60,7 @@ idk_primitives_renderer_t *idk_primitives_renderer_create(idk_window_t *window)
             "content/shaders/prim.frag", &fragShaderCode))
     {
         free(renderer);
+        free(vertShaderCode);
         return NULL;
     }
 

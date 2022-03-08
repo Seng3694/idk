@@ -4,6 +4,7 @@
 #include "idk/core/color.h"
 #include "idk/core/rectangle.h"
 #include "idk/core/vector2f.h"
+#include "idk/graphics/render_states.h"
 #include "idk/graphics/texture.h"
 #include "idk/graphics/window.h"
 
@@ -15,6 +16,6 @@ void idk_sprite_renderer_destroy(idk_sprite_renderer_t *renderer);
 void idk_sprite_renderer_draw(
     idk_sprite_renderer_t *renderer, const idk_texture_t *texture, const idk_rect_t textureRect,
     const idk_vec2_t position, const idk_vec2_t origin, const idk_vec2_t size, const float rotate,
-    const idk_color_t color);
+    const idk_color_t color, idk_render_states_t renderStates);
 
 #endif
