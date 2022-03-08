@@ -75,7 +75,7 @@ int idk_assert(
         return 1;
     }
 
-    printf("SUCCESS: %s:%d \"%s\"\n", fileName, line, function);
+    //printf("SUCCESS: %s:%d \"%s\"\n", fileName, line, function);
     return 0;
 }
 
