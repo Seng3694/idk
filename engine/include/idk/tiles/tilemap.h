@@ -25,6 +25,13 @@ idk_tilemap_t *idk_tilemap_create(
 
 void idk_tilemap_destroy(idk_tilemap_t *tilemap);
 
+inline tile_id idk_tilemap_get_tile(idk_tilemap_t *tilemap, const uint32_t x, const uint32_t y)
+{
+    if (y * tilemap->width + x >= tilemap->width * tilemap->height)
+        return IDK_EMPTY_TILE;
+    return tilemap->tiles[y * tilemap->width + x];
+}
+
 void idk_tilemap_update_vertex(idk_tilemap_t *tilemap, const uint32_t index);
 
 #endif

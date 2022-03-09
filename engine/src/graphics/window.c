@@ -155,6 +155,11 @@ void idk_window_display(idk_window_t *window)
     glfwSwapBuffers(window->window);
 }
 
+void idk_window_set_camera(idk_window_t *window, const idk_camera_t *cam)
+{
+    window->camera = *cam;
+}
+
 float idk_window_get_dt(idk_window_t *window)
 {
     return window->deltaTime;

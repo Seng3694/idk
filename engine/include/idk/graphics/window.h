@@ -25,6 +25,8 @@ void idk_window_display(idk_window_t *window);
 void idk_window_set_cursor_visibility(
     idk_window_t *window, const bool visible);
 
+void idk_window_set_camera(idk_window_t *window, const idk_camera_t *cam);
+
 float idk_window_get_dt(idk_window_t *window);
 idk_camera_t *idk_window_get_camera(idk_window_t *window);
 idk_vec2_t idk_window_get_size(const idk_window_t *window);

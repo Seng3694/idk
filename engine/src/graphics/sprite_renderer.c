@@ -64,9 +64,12 @@ void idk_sprite_renderer_draw(
     idk_mat4_t model = idk_matrix4_identity();
     idk_matrix4_translate2(&model, position);
 
-    idk_matrix4_rotate_center2(&model, rotate, origin);
+    idk_matrix4_translate(&model, origin.x, origin.y);
+    idk_matrix4_rotate(&model, rotate);
+    idk_matrix4_translate(&model, -origin.x, -origin.y);
 
     idk_matrix4_scale2(&model, size);
+
 
     idk_camera_t *cam = idk_window_get_camera(renderer->window);
     idk_mat4_t view;

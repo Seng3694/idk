@@ -1,8 +1,12 @@
 set(HEADER_FILES
+	include/font.h
+	include/text.h
 )
 
 set(SOURCE_FILES
+	src/font.c
     src/main.c
+	src/text.c
 )
 
 include_directories(include)

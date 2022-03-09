@@ -98,15 +98,13 @@ void idk_batch_renderer_draw(
 
     idk_shader_use(renderStates.currentShader);
     idk_shader_set_integer(renderStates.currentShader, "u_Image", 0);
-    idk_shader_set_color(
-        renderStates.currentShader, "u_Color", (idk_color_t){255, 255, 255, 255});
-
+    
     idk_camera_t *cam = idk_window_get_camera(renderer->window);
     idk_mat4_t view;
     idk_camera_get_transform_matrix(cam, &view);
 
     idk_mat4_t modelView;
-    idk_matrix4_combine(renderStates.currentMatrix, view, &modelView);
+    idk_matrix4_combine(view, renderStates.currentMatrix, &modelView);
 
     idk_shader_set_matrix4(
         renderStates.currentShader, "u_ModelView", &modelView);
