@@ -22,6 +22,8 @@ void idk_window_poll_events(idk_window_t *window);
 void idk_window_clear(idk_window_t *window);
 void idk_window_display(idk_window_t *window);
 
+bool idk_window_is_focused(idk_window_t *window);
+
 void idk_window_set_cursor_visibility(
     idk_window_t *window, const bool visible);
 

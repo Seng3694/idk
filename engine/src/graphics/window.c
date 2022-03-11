@@ -18,6 +18,7 @@ static void idk_mouse_pos_callback(
     GLFWwindow *window, double xpos, double ypos);
 static void idk_mouse_button_callback(
     GLFWwindow *window, int button, int action, int mods);
+static void idk_window_focus_callback(GLFWwindow *window, int focused);
 
 typedef struct idk_window
 {
@@ -34,6 +35,7 @@ typedef struct idk_window
     float lastFrame;
     uint8_t previousMouseButtons;
     uint8_t mouseButtons;
+    bool hasFocus;
 } idk_window_t;
 
 idk_window_t *idk_window_create(
@@ -53,6 +55,7 @@ idk_window_t *idk_window_create(
     window->previousMouseButtons = 0;
     memset(&window->gamepadState, 0, sizeof(GLFWgamepadstate));
     memset(&window->previousGamepadState, 0, sizeof(GLFWgamepadstate));
+    window->hasFocus = true;
 
     if (!glfwInit())
     {
@@ -70,6 +73,13 @@ idk_window_t *idk_window_create(
         glfwCreateWindow((int)width, (int)height, title, NULL, NULL);
     glfwMakeContextCurrent(window->window);
     glfwSwapInterval(0);
+
+    GLFWmonitor *primaryMonitor = glfwGetPrimaryMonitor();
+    GLFWvidmode *mode = glfwGetVideoMode(primaryMonitor);
+    const int windowPosX = (mode->width / 2.0f) - (width / 2.0f);
+    const int windowPosY = (mode->height / 2.0f) - (height / 2.0f);
+    glfwSetWindowPos(window->window, windowPosX, windowPosY);
+
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
@@ -90,6 +100,7 @@ idk_window_t *idk_window_create(
     glfwSetKeyCallback(window->window, idk_key_callback);
     glfwSetCursorPosCallback(window->window, idk_mouse_pos_callback);
     glfwSetMouseButtonCallback(window->window, idk_mouse_button_callback);
+    glfwSetWindowFocusCallback(window->window, idk_window_focus_callback);
 
     glViewport(0, 0, width, height);
     glEnable(GL_BLEND);
@@ -107,6 +118,11 @@ void idk_window_destroy(idk_window_t *window)
     glfwDestroyWindow(window->window);
     glfwTerminate();
     free(window);
+}
+
+bool idk_window_is_focused(idk_window_t *window)
+{
+    return window->hasFocus;
 }
 
 void idk_window_set_cursor_visibility(
@@ -382,4 +398,10 @@ static void idk_mouse_button_callback(
         idkWindow->mouseButtons =
             IDK_CLEAR_BIT(idkWindow->mouseButtons, button);
     }
+}
+
+static void idk_window_focus_callback(GLFWwindow *window, int focused)
+{
+    idk_window_t *idkWindow = (idk_window_t *)glfwGetWindowUserPointer(window);
+    idkWindow->hasFocus = focused;
 }
