@@ -73,9 +73,9 @@ void idk_matrix4_create2_ref(
 void idk_matrix4_combine(
     const idk_mat4_t left, const idk_mat4_t right, idk_mat4_t *result);
 
-void idk_matrix4_rotate(idk_mat4_t *matrix, const float radians);
-void idk_matrix4_rotate_center(idk_mat4_t *matrix, const float radians, const float centerX, const float centerY);
-void idk_matrix4_rotate_center2(idk_mat4_t *matrix, const float radians, const idk_vec2_t center);
+void idk_matrix4_rotate_x(idk_mat4_t *matrix, const float radians);
+void idk_matrix4_rotate_y(idk_mat4_t *matrix, const float radians);
+void idk_matrix4_rotate_z(idk_mat4_t *matrix, const float radians);
 
 void idk_matrix4_scale(idk_mat4_t *matrix, const float x, const float y);
 void idk_matrix4_scale2(idk_mat4_t *matrix, const idk_vec2_t vec);

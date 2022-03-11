@@ -207,7 +207,7 @@ IDK_TEST(CoreMatrix4CombineTest)
     return IDK_SUCCESS;
 }
 
-IDK_TEST(CoreMatrix4RotateTest)
+IDK_TEST(CoreMatrix4RotateZTest)
 {
     const idk_mat4_t expected = idk_matrix4_create(
          2.0f, -1.0f,  0.0f,  4.0f,
@@ -224,76 +224,7 @@ IDK_TEST(CoreMatrix4RotateTest)
     );
 
     //90 deg rotation
-    idk_matrix4_rotate(&actual, M_PI / 2.0f);
-
-    bool isEqual = true;
-    for (uint32_t i = 0; i < 16; ++i)
-    {
-        if (!float_equals(actual.data[i], expected.data[i], 6))
-        {
-            isEqual = false;
-            break;
-        }
-    }
-
-    IDK_ASSERT(isEqual);
-
-    return IDK_SUCCESS;
-}
-
-IDK_TEST(CoreMatrix4RotateCenterTest)
-{
-    const idk_mat4_t expected = idk_matrix4_create(
-        2.0f, -1.0f,  0.0f,  64.0f,
-        1.0f, -2.0f,  0.0f,  93.0f,
-        0.0f,  0.0f,  1.0f,   0.0f,
-        3.0f, -4.0f,  0.0f, 191.0f
-    );
-
-    idk_mat4_t actual = idk_matrix4_create(
-        1.0f, 2.0f, 3.0f, 4.0f,
-        2.0f, 1.0f, 2.0f, 3.0f, 
-        3.0f, 2.0f, 1.0f, 2.0f,
-        4.0f, 3.0f, 2.0f, 1.0f
-    );
-
-    //90 deg rotation
-    idk_matrix4_rotate_center(&actual, M_PI / 2.0f, 15.0f, 25.0f);
-
-    bool isEqual = true;
-    for (uint32_t i = 0; i < 16; ++i)
-    {
-        if (!float_equals(actual.data[i], expected.data[i], 6))
-        {
-            isEqual = false;
-            break;
-        }
-    }
-
-    IDK_ASSERT(isEqual);
-
-    return IDK_SUCCESS;
-}
-
-IDK_TEST(CoreMatrix4RotateCenter2Test)
-{
- const idk_mat4_t expected = idk_matrix4_create(
-        2.0f, -1.0f,  0.0f,  64.0f,
-        1.0f, -2.0f,  0.0f,  93.0f,
-        0.0f,  0.0f,  1.0f,   0.0f,
-        3.0f, -4.0f,  0.0f, 191.0f
-    );
-
-    idk_mat4_t actual = idk_matrix4_create(
-        1.0f, 2.0f, 3.0f, 4.0f,
-        2.0f, 1.0f, 2.0f, 3.0f, 
-        3.0f, 2.0f, 1.0f, 2.0f,
-        4.0f, 3.0f, 2.0f, 1.0f
-    );
-
-    //90 deg rotation
-    idk_matrix4_rotate_center2(
-        &actual, M_PI / 2.0f, (idk_vec2_t){15.0f, 25.0f});
+    idk_matrix4_rotate_z(&actual, M_PI / 2.0f);
 
     bool isEqual = true;
     for (uint32_t i = 0; i < 16; ++i)
@@ -594,13 +525,11 @@ IDK_TEST(CoreMatrix4GetInverseRefTest)
     CoreMatrix4ZeroTest, CoreMatrix4IdentityTest, CoreMatrix4CreateTest,      \
         CoreMatrix4Create2Test, CoreMatrix4ZeroRefTest,                       \
         CoreMatrix4IdentityRefTest, CoreMatrix4CreateRefTest,                 \
-        CoreMatrix4CombineTest, CoreMatrix4RotateTest,                        \
-        CoreMatrix4RotateCenterTest, CoreMatrix4RotateCenter2Test,            \
-        CoreMatrix4ScaleTest, CoreMatrix4Scale2Test,                          \
+        CoreMatrix4CombineTest, CoreMatrix4ScaleTest, CoreMatrix4Scale2Test,  \
         CoreMatrix4TranslateTest, CoreMatrix4Translate2Test,                  \
         CoreMatrix4TransformPointTest, CoreMatrix4TransformPointRefTest,      \
         CoreMatrix4TransformPoint2RefTest, CoreMatrix4OrthographicTest,       \
         CoreMatrix4GetInverseTest, CoreMatrix4GetInverseRefTest,              \
-        CoreMatrix4CopyTest, CoreMatrix4CopyRefTest
+        CoreMatrix4CopyTest, CoreMatrix4CopyRefTest, CoreMatrix4RotateZTest
 
 #endif

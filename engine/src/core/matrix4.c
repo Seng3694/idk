@@ -132,35 +132,55 @@ void idk_matrix4_combine(
         a[3] * b[12] + a[7] * b[13] + a[15] * b[15]);
 }
 
-void idk_matrix4_rotate(idk_mat4_t *matrix, const float radians)
+void idk_matrix4_rotate_x(idk_mat4_t *matrix, const float radians)
 {
     const float cosine = cosf(radians);
+    const float sine = sinf(radians);
+    idk_mat4_t rotation = {
+        .m00 = 1.0f,
+        .m11 = cosine,
+        .m12 = sine,
+        .m21 = -sine,
+        .m22 = cosine,
+        .m33 = 1};
+    idk_matrix4_combine(*matrix, rotation, matrix);
+}
+
+void idk_matrix4_rotate_y(idk_mat4_t *matrix, const float radians)
+{
+    const float cosine = cosf(radians);
+    const float sine = sinf(radians);
+    idk_mat4_t rotation = {
+        .m00 = cosf(radians),
+        .m02 = sinf(radians),
+        .m11 = 1,
+        .m20 = -rotation.m02,
+        .m22 = rotation.m00,
+        .m33 = 1};
+    idk_matrix4_combine(*matrix, rotation, matrix);
+}
+
+void idk_matrix4_rotate_z(idk_mat4_t *matrix, const float radians)
+{
+    /*const float cosine = cosf(radians);
     const float sine = sinf(radians);
     const idk_mat4_t rotation = idk_matrix4_create2(
         cosine,  -sine, 0.0f,
           sine, cosine, 0.0f,
           0.0f,   0.0f, 1.0f);
 
-    idk_matrix4_combine(*matrix, rotation, matrix);
-}
-
-void idk_matrix4_rotate_center(
-    idk_mat4_t *matrix, const float radians, const float centerX,
-    const float centerY)
-{
+    idk_matrix4_combine(*matrix, rotation, matrix);*/
     const float cosine = cosf(radians);
     const float sine = sinf(radians);
-    const idk_mat4_t rotation = idk_matrix4_create2(
-        cosine, -sine,  centerX * (1 - cosine) + centerY * sine,
-          sine, cosine, centerY * (1 - cosine) - centerX * sine,
-          0.0f,   0.0f, 1.0f);
-
+    idk_mat4_t rotation = { 
+        .m00 = cosine,
+        .m01 = sine,
+        .m10 = -sine,
+        .m11 = cosine,
+        .m22 = 1,
+        .m33 = 1
+    };
     idk_matrix4_combine(*matrix, rotation, matrix);
-}
-
-void idk_matrix4_rotate_center2(idk_mat4_t *matrix, const float radians, const idk_vec2_t center)
-{
-    idk_matrix4_rotate_center(matrix, radians, center.x, center.y);
 }
 
 void idk_matrix4_scale(idk_mat4_t *matrix, const float x, const float y)
