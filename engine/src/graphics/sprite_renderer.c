@@ -7,6 +7,9 @@
 #include <glad/glad.h>
 #include <stdlib.h>
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 typedef struct idk_sprite_renderer
 {
     idk_window_t *window;
@@ -58,18 +61,25 @@ void idk_sprite_renderer_destroy(idk_sprite_renderer_t *renderer)
 void idk_sprite_renderer_draw(
     idk_sprite_renderer_t *renderer, const idk_texture_t *texture,
     const idk_rect_t textureRect, const idk_vec2_t position,
-    const idk_vec2_t origin, const idk_vec2_t size, const float rotate,
-    const idk_color_t color, idk_render_states_t renderStates)
+    const idk_vec2_t origin, const idk_vec2_t scale, const float rotate,
+    const idk_color_t color, idk_sprite_flip_states_t flipStates,
+    idk_render_states_t renderStates)
 {
     idk_mat4_t model = idk_matrix4_identity();
     idk_matrix4_translate2(&model, position);
 
     idk_matrix4_translate(&model, origin.x, origin.y);
-    idk_matrix4_rotate(&model, rotate);
+    idk_matrix4_rotate_z(&model, rotate);
+
+    if ((flipStates & IDK_SPRITE_FLIP_HORIZONTAL) == IDK_SPRITE_FLIP_HORIZONTAL)
+        idk_matrix4_rotate_x(&model, M_PI);
+    if ((flipStates & IDK_SPRITE_FLIP_VERTICAL) ==
+        IDK_SPRITE_FLIP_VERTICAL)
+        idk_matrix4_rotate_y(&model, M_PI);
+
     idk_matrix4_translate(&model, -origin.x, -origin.y);
 
-    idk_matrix4_scale2(&model, size);
-
+    idk_matrix4_scale2(&model, scale);
 
     idk_camera_t *cam = idk_window_get_camera(renderer->window);
     idk_mat4_t view;
