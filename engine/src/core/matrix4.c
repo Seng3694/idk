@@ -151,8 +151,8 @@ void idk_matrix4_rotate_y(idk_mat4_t *matrix, const float radians)
     const float cosine = cosf(radians);
     const float sine = sinf(radians);
     idk_mat4_t rotation = {
-        .m00 = cosf(radians),
-        .m02 = sinf(radians),
+        .m00 = cosine,
+        .m02 = sine,
         .m11 = 1,
         .m20 = -rotation.m02,
         .m22 = rotation.m00,

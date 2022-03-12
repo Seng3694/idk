@@ -75,7 +75,7 @@ idk_window_t *idk_window_create(
     glfwSwapInterval(0);
 
     GLFWmonitor *primaryMonitor = glfwGetPrimaryMonitor();
-    GLFWvidmode *mode = glfwGetVideoMode(primaryMonitor);
+    const GLFWvidmode *mode = glfwGetVideoMode(primaryMonitor);
     const int windowPosX = (mode->width / 2.0f) - (width / 2.0f);
     const int windowPosY = (mode->height / 2.0f) - (height / 2.0f);
     glfwSetWindowPos(window->window, windowPosX, windowPosY);
