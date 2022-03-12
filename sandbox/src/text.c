@@ -22,7 +22,7 @@ void idk_text_print(idk_text_t *text, const char *fmt, ...)
 {
     va_list args;
     va_start(args, fmt);
-    vsnprintf_s(text->data, text->capacity + 1, text->data, fmt, args);
+    vsnprintf_s(text->data, text->capacity + 1, text->capacity + 1, fmt, args);
     va_end(args);
 
     text->length = (uint32_t)strlen(text->data);
@@ -37,14 +37,13 @@ void idk_text_destroy(idk_text_t *text)
     free(text);
 }
 
-static void idk_text_set_char_vertices(
-    idk_text_t *text, const uint32_t index)
+static void idk_text_set_char_vertices(idk_text_t *text, const uint32_t index)
 {
     const uint32_t vindex = index * 6;
     const char c = text->data[index];
     idk_rect_t textureRect;
     assert(idk_font_get_char_rect(text->font, c, &textureRect));
-        
+
     const idk_texture_t *texture = text->font->sheet->texture;
 
     const float tex_l = textureRect.left / texture->width;
@@ -55,7 +54,9 @@ static void idk_text_set_char_vertices(
     const float margin = 1.5f;
     const float tile_l = index * text->font->sheet->tileWidth + margin;
     const float tile_t = margin;
-    const float tile_r = ((index * text->font->sheet->tileWidth) + text->font->sheet->tileWidth) - margin;
+    const float tile_r = ((index * text->font->sheet->tileWidth) +
+                          text->font->sheet->tileWidth) -
+                         margin;
     const float tile_b = text->font->sheet->tileHeight - margin;
 
     text->vertices[vindex] =
