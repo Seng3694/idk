@@ -1,2 +1,2 @@
-# 2d_platformer
-2D Platformer written in C and OpenGL
+# IDK
+Graphics library written in C and OpenGL.
