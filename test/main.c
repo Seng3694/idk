@@ -11,9 +11,9 @@
 IDK_MAIN(
 	CoreColorTests, 
 	CoreVector2fTests, 
-    CoreMatrix4Tests,
-    CoreFileSystemTests,
+	CoreMatrix4Tests,
+	CoreFileSystemTests,
 	CoreRectangleTests,
-    //GraphicsShaderTests
-	//GraphicsWindowTests
-    TilesTilesetTests);
+	GraphicsShaderTests,
+	GraphicsWindowTests,
+	TilesTilesetTests);
