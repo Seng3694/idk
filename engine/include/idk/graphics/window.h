@@ -13,7 +13,8 @@
 
 typedef struct idk_window idk_window_t;
 
-idk_window_t *idk_window_create(const uint32_t width, const uint32_t height, const char* title);
+idk_window_t *idk_window_create(
+    const uint32_t width, const uint32_t height, const char *title);
 void idk_window_destroy(idk_window_t *window);
 
 bool idk_window_is_open(idk_window_t *window);
@@ -47,13 +48,14 @@ bool idk_window_is_key_up(idk_window_t *window, const idk_key_t key);
 bool idk_window_was_key_pressed(idk_window_t *window, const idk_key_t key);
 bool idk_window_was_key_released(idk_window_t *window, const idk_key_t key);
 
-bool idk_window_is_mouse_down(idk_window_t *window, const idk_mouse_button_t btn);
-bool idk_window_is_mouse_up(idk_window_t *window, const idk_mouse_button_t btn);
+bool idk_window_is_mouse_down(
+    idk_window_t *window, const idk_mouse_button_t btn);
+bool idk_window_is_mouse_up(
+    idk_window_t *window, const idk_mouse_button_t btn);
 bool idk_window_was_mouse_pressed(
     idk_window_t *window, const idk_mouse_button_t btn);
 bool idk_window_was_mouse_released(
     idk_window_t *window, const idk_mouse_button_t btn);
-
 
 idk_vec2_t idk_window_get_mouse_pos(idk_window_t *window);
 void idk_window_get_mouse_pos2(idk_window_t *window, float *x, float *y);
@@ -68,6 +70,10 @@ bool idk_window_was_gamepad_released(
     idk_window_t *window, const idk_gamepad_button_t btn);
 
 float idk_window_get_gamepad_axis(
+    idk_window_t *window, const idk_gamepad_axis_t axis);
+bool idk_window_was_gamepad_axis_pressed(
+    idk_window_t *window, const idk_gamepad_axis_t axis);
+bool idk_window_was_gamepad_axis_released(
     idk_window_t *window, const idk_gamepad_axis_t axis);
 
 #endif

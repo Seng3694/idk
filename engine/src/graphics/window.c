@@ -63,7 +63,7 @@ idk_window_t *idk_window_create(
         free(window);
         return NULL;
     }
-    
+
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -79,7 +79,6 @@ idk_window_t *idk_window_create(
     const int windowPosX = (mode->width / 2.0f) - (width / 2.0f);
     const int windowPosY = (mode->height / 2.0f) - (height / 2.0f);
     glfwSetWindowPos(window->window, windowPosX, windowPosY);
-
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
@@ -125,10 +124,11 @@ bool idk_window_is_focused(idk_window_t *window)
     return window->hasFocus;
 }
 
-void idk_window_set_cursor_visibility(
-    idk_window_t *window, const bool visible)
+void idk_window_set_cursor_visibility(idk_window_t *window, const bool visible)
 {
-    glfwSetInputMode(window->window, GLFW_CURSOR, visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN);
+    glfwSetInputMode(
+        window->window, GLFW_CURSOR,
+        visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN);
 }
 
 bool idk_window_is_open(idk_window_t *window)
@@ -335,6 +335,20 @@ float idk_window_get_gamepad_axis(
     idk_window_t *window, const idk_gamepad_axis_t axis)
 {
     return window->gamepadState.axes[axis];
+}
+
+bool idk_window_was_gamepad_axis_pressed(
+    idk_window_t *window, const idk_gamepad_axis_t axis)
+{
+    return window->previousGamepadState.axes[axis] == -1 &&
+           window->gamepadState.axes[axis] != -1;
+}
+
+bool idk_window_was_gamepad_axis_released(
+    idk_window_t *window, const idk_gamepad_axis_t axis)
+{
+    return window->previousGamepadState.axes[axis] != -1 &&
+           window->gamepadState.axes[axis] == -1;
 }
 
 #ifndef NDEBUG
