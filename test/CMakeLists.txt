@@ -17,7 +17,7 @@ set(SOURCE_FILES
 include_directories(./)
 add_executable(${PROJECT_NAME}_tests ${HEADER_FILES} ${SOURCE_FILES} )
 
-target_link_libraries(${PROJECT_NAME}_tests ${PROJECT_NAME}_engine)
+target_link_libraries(${PROJECT_NAME}_tests ${PROJECT_NAME})
 
 set(IDK_RUN_TESTS ON)
 

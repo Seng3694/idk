@@ -43,9 +43,9 @@ set(SOURCE_FILES
 	src/tiles/tileset.c
 )
 
-add_library(${PROJECT_NAME}_engine ${HEADER_FILES} ${SOURCE_FILES} )
-target_include_directories(${PROJECT_NAME}_engine PUBLIC include)
+add_library(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES} )
+target_include_directories(${PROJECT_NAME} PUBLIC include)
 
-target_link_libraries(${PROJECT_NAME}_engine glad)
-target_link_libraries(${PROJECT_NAME}_engine glfw)
-target_link_libraries(${PROJECT_NAME}_engine stb)
+target_link_libraries(${PROJECT_NAME} glad)
+target_link_libraries(${PROJECT_NAME} glfw)
+target_link_libraries(${PROJECT_NAME} stb)
