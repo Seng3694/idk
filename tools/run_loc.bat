@@ -9,4 +9,4 @@ if /I "%1"=="-nt" (
 	set exclude="ext out .vs"
 )
 
-ruby %~dp0\loc.rb -f "c h inl" -e %exclude% -c %~dp0..
+ruby %~dp0\..\ext\loc\loc.rb -f "c h inl" -e %exclude% -c %~dp0..
