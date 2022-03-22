@@ -5,6 +5,8 @@ set(HEADER_FILES
 	include/idk/core/file_system.h
 	include/idk/core/gamepad_state.h
 	include/idk/core/keys.h
+	include/idk/core/math.h
+	include/idk/core/math.inl
 	include/idk/core/matrix4.h
 	include/idk/core/mouse_buttons.h
 	include/idk/core/rectangle.h
