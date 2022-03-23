@@ -6,5 +6,11 @@ set(IDK_RUN_TESTS ON)
 
 add_subdirectory(ext)
 add_subdirectory(engine)
-add_subdirectory(test)
-add_subdirectory(examples)
+
+if(IDK_BUILD_TESTS)
+	add_subdirectory(test)
+endif()
+
+if(IDK_BUILD_EXAMPLES)
+	add_subdirectory(examples)
+endif()
