@@ -1,6 +1,10 @@
 #ifndef IDK_CORE_KEYS_H
 #define IDK_CORE_KEYS_H
 
+#include "idk/core/common.h"
+
+IDK_C_API_BEGIN
+
 typedef enum idk_key
 {
     IDK_KEY_SPACE = 32,
@@ -124,5 +128,7 @@ typedef enum idk_key
     IDK_KEY_RIGHT_SUPER = 347,
     IDK_KEY_MENU = 348
 } idk_key_t;
+
+IDK_C_API_END
 
 #endif

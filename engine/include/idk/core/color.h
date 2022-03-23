@@ -1,6 +1,10 @@
 #ifndef IDK_CORE_COLOR_H
 #define IDK_CORE_COLOR_H
 
+#include "idk/core/common.h"
+
+IDK_C_API_BEGIN
+
 #include <stdint.h>
 
 typedef struct idk_color
@@ -21,5 +25,7 @@ void idk_color_from_rgba(
 
 void idk_color_to_normalized(const idk_color_t color, float *out);
 void idk_color_packed_to_normalized(const uint32_t packed, float *out);
+
+IDK_C_API_END
 
 #endif

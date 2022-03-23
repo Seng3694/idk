@@ -1,6 +1,10 @@
 #ifndef IDK_TILES_TILEMAP_H
 #define IDK_TILES_TILEMAP_H
 
+#include "idk/core/common.h"
+
+IDK_C_API_BEGIN
+
 #include "idk/core/vertex.h"
 #include "idk/tiles/tileset.h"
 
@@ -33,5 +37,7 @@ inline tile_id idk_tilemap_get_tile(idk_tilemap_t *tilemap, const uint32_t x, co
 }
 
 void idk_tilemap_update_vertex(idk_tilemap_t *tilemap, const uint32_t index);
+
+IDK_C_API_END
 
 #endif

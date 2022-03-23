@@ -28,6 +28,7 @@ set(HEADER_FILES
 
 set(SOURCE_FILES
 	src/core/color.c
+	src/core/common.c
 	src/core/file_system.c
 	src/core/matrix4.c
 	src/core/rectangle.c

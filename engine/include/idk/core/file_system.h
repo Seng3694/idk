@@ -1,6 +1,10 @@
 #ifndef IDK_CORE_FILE_SYSTEM_H
 #define IDK_CORE_FILE_SYSTEM_H
 
+#include "idk/core/common.h"
+
+IDK_C_API_BEGIN
+
 #include <stdbool.h>
 #include <stddef.h>
 
@@ -14,5 +18,7 @@ bool idk_file_system_load_file_line_by_line(
 bool idk_file_system_save_file_string(const char *path, const char *contents);
 bool idk_file_system_save_file_binary(
     const char *path, const size_t contentSize, const void *contents);
+
+IDK_C_API_END
 
 #endif

@@ -1,6 +1,10 @@
 #ifndef IDK_GRAPHICS_CAMERA_H
 #define IDK_GRAPHICS_CAMERA_H
 
+#include "idk/core/common.h"
+
+IDK_C_API_BEGIN
+
 #include <stdbool.h>
 
 #include "idk/core/matrix4.h"
@@ -36,5 +40,7 @@ void idk_camera_get_transform_matrix(
 
 void idk_camera_get_inverse_transform_matrix(
     idk_camera_t *camera, idk_mat4_t *outMatrix);
+
+IDK_C_API_END
 
 #endif

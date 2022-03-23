@@ -1,6 +1,10 @@
 #ifndef IDK_GRAPHICS_TEXTURE_H
 #define IDK_GRAPHICS_TEXTURE_H
 
+#include "idk/core/common.h"
+
+IDK_C_API_BEGIN
+
 #include <stdint.h>
 #include "idk/core/color.h"
 
@@ -21,5 +25,6 @@ void idk_texture_destroy(const idk_texture_t *texture);
 
 void idk_texture_bind(const idk_texture_t *texture);
 
+IDK_C_API_END
 
 #endif

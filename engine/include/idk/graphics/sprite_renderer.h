@@ -1,6 +1,10 @@
 #ifndef IDK_GRAPHICS_SPRITE_RENDERER_H
 #define IDK_GRAPHICS_SPRITE_RENDERER_H
 
+#include "idk/core/common.h"
+
+IDK_C_API_BEGIN
+
 #include "idk/core/color.h"
 #include "idk/core/rectangle.h"
 #include "idk/core/vector2f.h"
@@ -27,5 +31,7 @@ void idk_sprite_renderer_draw(
     const idk_vec2_t origin, const idk_vec2_t scale, const float rotate,
     const idk_color_t color, idk_sprite_flip_states_t flipStates,
     idk_render_states_t renderStates);
+
+IDK_C_API_END
 
 #endif

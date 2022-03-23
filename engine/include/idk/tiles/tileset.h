@@ -1,6 +1,10 @@
 #ifndef IDK_TILES_TILESET_H
 #define IDK_TILES_TILESET_H
 
+#include "idk/core/common.h"
+
+IDK_C_API_BEGIN
+
 #include "idk/core/rectangle.h"
 #include "idk/graphics/texture.h"
 
@@ -21,5 +25,7 @@ idk_tileset_t *idk_tileset_create(
     const uint32_t tileHeight);
 
 void idk_tileset_destroy(idk_tileset_t *tileset);
+
+IDK_C_API_END
 
 #endif

@@ -1,6 +1,10 @@
 #ifndef IDK_CORE_RECTANGLE_H
 #define IDK_CORE_RECTANGLE_H
 
+#include "idk/core/common.h"
+
+IDK_C_API_BEGIN
+
 #include "idk/core/vector2f.h"
 
 #include <stdbool.h>
@@ -58,5 +62,7 @@ bool idk_rectangle_intersects(
     idk_rect_t *outIntersection);
 
 #include "idk/core/rectangle.inl"
+
+IDK_C_API_END
 
 #endif

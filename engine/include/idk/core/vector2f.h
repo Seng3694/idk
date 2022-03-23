@@ -1,6 +1,10 @@
 #ifndef IDK_CORE_VECTOR2F_H
 #define IDK_CORE_VECTOR2F_H
 
+#include "idk/core/common.h"
+
+IDK_C_API_BEGIN
+
 #include <stdbool.h>
 
 typedef struct idk_vector2f
@@ -44,5 +48,7 @@ inline void idk_vector2f_div_eq(idk_vec2_t *left, const idk_vec2_t right);
 inline void idk_vector2f_divf_eq(idk_vec2_t *left, const float right);
 
 #include "vector2f.inl"
+
+IDK_C_API_END
 
 #endif

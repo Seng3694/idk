@@ -1,6 +1,10 @@
 #ifndef IDK_GRAPHICS_BATCH_RENDERER_H
 #define IDK_GRAPHICS_BATCH_RENDERER_H
 
+#include "idk/core/common.h"
+
+IDK_C_API_BEGIN
+
 #include <stdint.h>
 #include "idk/core/vertex.h"
 #include "idk/graphics/render_states.h"
@@ -19,5 +23,7 @@ void idk_batch_renderer_reset(
     const idk_vertex_t *vertices);
 
 void idk_batch_renderer_draw(idk_batch_renderer_t *renderer, idk_render_states_t renderStates);
+
+IDK_C_API_END
 
 #endif

@@ -1,6 +1,10 @@
 #ifndef IDK_CORE_MATRIX4_H
 #define IDK_CORE_MATRIX4_H
 
+#include "idk/core/common.h"
+
+IDK_C_API_BEGIN
+
 #include "idk/core/vector2f.h"
 
 typedef struct idk_matrix4
@@ -93,5 +97,7 @@ void idk_matrix4_orthographic(
 
 idk_mat4_t idk_matrix4_get_inverse(const idk_mat4_t *matrix);
 void idk_matrix4_get_inverse_ref(const idk_mat4_t *matrix, idk_mat4_t *out);
+
+IDK_C_API_END
 
 #endif

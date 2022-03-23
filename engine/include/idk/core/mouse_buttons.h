@@ -1,6 +1,10 @@
 #ifndef IDK_CORE_MOUSE_BUTTONS_H
 #define IDK_CORE_MOUSE_BUTTONS_H
 
+#include "idk/core/common.h"
+
+IDK_C_API_BEGIN
+
 typedef enum idk_mouse_button
 {
 	IDK_MOUSE_BUTTON_1 = 0,
@@ -16,5 +20,7 @@ typedef enum idk_mouse_button
     IDK_MOUSE_BUTTON_RIGHT = IDK_MOUSE_BUTTON_2,
     IDK_MOUSE_BUTTON_MIDDLE = IDK_MOUSE_BUTTON_3
 } idk_mouse_button_t;
+
+IDK_C_API_END
 
 #endif

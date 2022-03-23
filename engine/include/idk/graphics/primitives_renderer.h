@@ -1,6 +1,10 @@
 #ifndef IDK_GRAPHICS_PRIMTIVES_RENDERER_H
 #define IDK_GRAPHICS_PRIMTIVES_RENDERER_H
 
+#include "idk/core/common.h"
+
+IDK_C_API_BEGIN
+
 #include <stdint.h>
 #include "idk/core/color.h"
 #include "idk/graphics/window.h"
@@ -50,5 +54,7 @@ void idk_draw_circle(
 void idk_draw_circle_fill(
     idk_primitives_renderer_t *renderer, const float x, const float y,
     const float radius);
+
+IDK_C_API_END
 
 #endif

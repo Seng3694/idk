@@ -1,6 +1,10 @@
 #ifndef IDK_GRAPHICS_WINDOW_H
 #define IDK_GRAPHICS_WINDOW_H
 
+#include "idk/core/common.h"
+
+IDK_C_API_BEGIN
+
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -75,5 +79,7 @@ bool idk_window_was_gamepad_axis_pressed(
     idk_window_t *window, const idk_gamepad_axis_t axis);
 bool idk_window_was_gamepad_axis_released(
     idk_window_t *window, const idk_gamepad_axis_t axis);
+
+IDK_C_API_END
 
 #endif

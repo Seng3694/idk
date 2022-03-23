@@ -1,6 +1,10 @@
 #ifndef IDK_CORE_GAMEPAD_STATE_H
 #define IDK_CORE_GAMEPAD_STATE_H
 
+#include "idk/core/common.h"
+
+IDK_C_API_BEGIN
+
 #include <stdint.h>
 typedef enum idk_gamepad_button
 {
@@ -36,5 +40,7 @@ typedef enum idk_gamepad_axis
     IDK_GAMEPAD_AXIS_RIGHT_TRIGGER = 5,
     IDK_GAMEPAD_AXIS_LAST = IDK_GAMEPAD_AXIS_RIGHT_TRIGGER
 } idk_gamepad_axis_t;
+
+IDK_C_API_END
 
 #endif

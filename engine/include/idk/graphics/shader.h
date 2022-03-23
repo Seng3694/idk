@@ -1,6 +1,10 @@
 #ifndef IDK_GRAPHICS_SHADER_H
 #define IDK_GRAPHICS_SHADER_H
 
+#include "idk/core/common.h"
+
+IDK_C_API_BEGIN
+
 #include <stdint.h>
 #include "idk/core/color.h"
 #include "idk/core/matrix4.h"
@@ -43,5 +47,7 @@ void idk_shader_set_color(
 
 void idk_shader_set_matrix4(
     const idk_shader_t shader, const char *name, const idk_matrix4_t* matrix);
+
+IDK_C_API_END
 
 #endif
