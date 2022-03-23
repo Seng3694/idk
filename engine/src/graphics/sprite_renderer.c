@@ -10,8 +10,16 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+typedef struct idk_sprite_shader_uniform
+{
+    int32_t u_Image;
+    int32_t u_Color;
+    int32_t u_ModelView;
+} idk_sprite_shader_uniform_t;
+
 typedef struct idk_sprite_renderer
 {
+    idk_sprite_shader_uniform_t uniform;
     idk_window_t *window;
     uint32_t vao;
     uint32_t vbo;
@@ -21,6 +29,8 @@ idk_sprite_renderer_t *idk_sprite_renderer_create(idk_window_t* window)
 {
     idk_sprite_renderer_t *renderer = malloc(sizeof(idk_sprite_renderer_t));
     renderer->window = window;
+    renderer->uniform.u_Color = -1;
+    renderer->uniform.u_ModelView = -1;
 
     float vertices[] = {// pos      // tex
                         0.0f, 1.0f, 0.0f, 1.0f, 
@@ -92,10 +102,20 @@ void idk_sprite_renderer_draw(
     idk_matrix4_combine(modelView, renderStates.currentMatrix, &transform);
 
     idk_shader_use(renderStates.currentShader);
-    idk_shader_set_integer(renderStates.currentShader, "u_Image", 0);
-    idk_shader_set_matrix4(
-        renderStates.currentShader, "u_ModelView", &transform);
-    idk_shader_set_color(renderStates.currentShader, "u_Color", color);
+
+    if (renderer->uniform.u_Image == -1)
+        renderer->uniform.u_Image =
+            glGetUniformLocation(renderStates.currentShader, "u_Image");
+    if (renderer->uniform.u_Color == -1)
+        renderer->uniform.u_Color =
+            glGetUniformLocation(renderStates.currentShader, "u_Color");
+    if (renderer->uniform.u_ModelView == -1)
+        renderer->uniform.u_ModelView =
+            glGetUniformLocation(renderStates.currentShader, "u_ModelView");
+
+    idk_shader_set_integer(renderer->uniform.u_Image, 0);
+    idk_shader_set_matrix4(renderer->uniform.u_ModelView, &transform);
+    idk_shader_set_color(renderer->uniform.u_Color, color);
 
     glActiveTexture(GL_TEXTURE0);
     idk_texture_bind(texture);

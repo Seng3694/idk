@@ -102,59 +102,57 @@ void idk_shader_use(idk_shader_t shader)
     glUseProgram(shader);
 }
 
-void idk_shader_set_float(
-    const idk_shader_t shader, const char *name, const float value)
+int32_t idk_shader_get_uniform_location(idk_shader_t shader, const char *name)
 {
-    glUniform1f(glGetUniformLocation(shader, name), value);
+    return glGetUniformLocation(shader, name);
 }
 
-void idk_shader_set_integer(
-    const idk_shader_t shader, const char *name, const int32_t value)
+void idk_shader_set_float(uint32_t id, const float value)
 {
-    glUniform1i(glGetUniformLocation(shader, name), value);
+    glUniform1f(id, value);
 }
 
-void idk_shader_set_float2(
-    const idk_shader_t shader, const char *name, const float x, const float y)
+void idk_shader_set_integer(uint32_t id, const int32_t value)
 {
-    glUniform2f(glGetUniformLocation(shader, name), x, y);
+    glUniform1i(id, value);
 }
 
-void idk_shader_set_vec2f(
-    const idk_shader_t shader, const char *name, const idk_vector2f_t vec)
+void idk_shader_set_float2(uint32_t id, const float x, const float y)
 {
-    idk_shader_set_float2(shader, name, vec.x, vec.y);
+    glUniform2f(id, x, y);
+}
+
+void idk_shader_set_vec2f(uint32_t id, const idk_vector2f_t vec)
+{
+    idk_shader_set_float2(id, vec.x, vec.y);
 }
 
 void idk_shader_set_float3(
-    const idk_shader_t shader, const char *name, const float x, const float y,
+    uint32_t id, const float x, const float y,
     const float z)
 {
-    glUniform3f(glGetUniformLocation(shader, name), x, y, z);
+    glUniform3f(id, x, y, z);
 }
 
 void idk_shader_set_float4(
-    const idk_shader_t shader, const char *name, const float x, const float y,
+    uint32_t id, const float x, const float y,
     const float z, const float w)
 {
-    glUniform4f(glGetUniformLocation(shader, name), x, y, z, w);
+    glUniform4f(id, x, y, z, w);
 }
 
-void idk_shader_set_color(
-    const idk_shader_t shader, const char *name, const idk_color_t color)
+void idk_shader_set_color(uint32_t id, const idk_color_t color)
 {
     float normalized[4];
     idk_color_to_normalized(color, normalized);
     idk_shader_set_float4(
-        shader, name, normalized[0], normalized[1], normalized[2],
+        id, normalized[0], normalized[1], normalized[2],
         normalized[3]);
 }
 
-void idk_shader_set_matrix4(
-    const idk_shader_t shader, const char *name, const idk_matrix4_t *matrix)
+void idk_shader_set_matrix4(uint32_t id, const idk_matrix4_t *matrix)
 {
-    glUniformMatrix4fv(
-        glGetUniformLocation(shader, name), 1, GL_FALSE, matrix->data);
+    glUniformMatrix4fv(id, 1, GL_FALSE, matrix->data);
 }
 
 static bool idk_shader_check_compile_errors(const uint32_t shaderID)

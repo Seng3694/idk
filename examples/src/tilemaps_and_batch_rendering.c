@@ -95,6 +95,8 @@ int main(void)
     idk_shader_t shader =
         idk_shader_create_vf(vertShaderSource, fragShaderSource);
 
+    const int32_t shaderColorUniform = idk_shader_get_uniform_location(shader, "u_Color");
+
     idk_render_states_t states = {
         .currentShader = shader, .currentMatrix = idk_matrix4_identity()};
 
@@ -180,8 +182,6 @@ int main(void)
 
         states.currentMatrix = idk_matrix4_identity();
         idk_window_set_camera(window, &cam);
-        idk_shader_set_color(
-            shader, "u_Color", (idk_color_t){255, 255, 255, 255});
         idk_batch_renderer_draw(br, states);
 
         states.currentMatrix = idk_matrix4_identity();
@@ -196,7 +196,7 @@ int main(void)
             .b = (uint8_t)(((sinf(totalElapsed - M_PI) + 1) / 2.0f) * 255),
             .a = 255};
 
-        idk_shader_set_color(shader, "u_Color", color);
+        idk_shader_set_color(shaderColorUniform, color);
 
         idk_text_print(text, "fps B %8.3f noice", 1 / dt);
         idk_batch_renderer_reset(

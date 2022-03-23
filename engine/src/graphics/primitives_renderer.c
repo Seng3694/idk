@@ -34,8 +34,15 @@
 #define CIRCLE_OFFSET (RECTANGLE_FILL_OFFSET + RECTANGLE_FILL_VERTEX_COUNT)
 #define CIRCLE_FILL_OFFSET (CIRCLE_OFFSET + CIRCLE_VERTEX_COUNT)
 
+typedef struct idk_prim_shader_uniform
+{
+    int32_t u_Color;
+    int32_t u_ModelView;
+} idk_prim_shader_uniform_t;
+
 typedef struct idk_primitives_renderer
 {
+    idk_prim_shader_uniform_t uniform;
     idk_window_t *window;
     idk_shader_t shader;
     uint32_t vao;
@@ -65,6 +72,10 @@ idk_primitives_renderer_t *idk_primitives_renderer_create(idk_window_t *window)
     }
 
     renderer->shader = idk_shader_create_vf(vertShaderCode, fragShaderCode);
+    renderer->uniform.u_Color =
+        glGetUniformLocation(renderer->shader, "u_Color");
+    renderer->uniform.u_ModelView =
+        glGetUniformLocation(renderer->shader, "u_ModelView");
 
     free(vertShaderCode);
     free(fragShaderCode);
@@ -100,9 +111,7 @@ void idk_primitives_renderer_set_color(
     idk_primitives_renderer_t *renderer, float r, float g, float b, float a)
 {
     glUseProgram(renderer->shader);
-    glUniform4fv(
-        glGetUniformLocation(renderer->shader, "u_Color"), 1,
-        (float[]){r, g, b, a});
+    idk_shader_set_float4(renderer->uniform.u_Color, r, g, b, a);
     glUseProgram(0);
 }
 void idk_primitives_renderer_set_color2(
@@ -133,7 +142,7 @@ void idk_draw_point(
     idk_camera_t *cam = idk_window_get_camera(renderer->window);
     idk_mat4_t view;
     idk_camera_get_transform_matrix(cam, &view);
-    idk_shader_set_matrix4(renderer->shader, "u_ModelView", &view);
+    idk_shader_set_matrix4(renderer->uniform.u_ModelView, &view);
 
     glDrawArrays(GL_POINTS, POINT_OFFSET, POINT_VERTEX_COUNT);
     glBindVertexArray(0);
@@ -156,7 +165,7 @@ void idk_draw_line(
     idk_camera_t *cam = idk_window_get_camera(renderer->window);
     idk_mat4_t view;
     idk_camera_get_transform_matrix(cam, &view);
-    idk_shader_set_matrix4(renderer->shader, "u_ModelView", &view);
+    idk_shader_set_matrix4(renderer->uniform.u_ModelView, &view);
 
     glDrawArrays(GL_LINES, LINE_OFFSET, LINE_VERTEX_COUNT);
     glBindVertexArray(0);
@@ -196,7 +205,7 @@ void idk_draw_triangle_fill(
     idk_camera_t *cam = idk_window_get_camera(renderer->window);
     idk_mat4_t view;
     idk_camera_get_transform_matrix(cam, &view);
-    idk_shader_set_matrix4(renderer->shader, "u_ModelView", &view);
+    idk_shader_set_matrix4(renderer->uniform.u_ModelView, &view);
 
     glDrawArrays(GL_TRIANGLES, TRIANGLE_OFFSET, TRIANGLE_VERTEX_COUNT);
     glBindVertexArray(0);
@@ -227,7 +236,7 @@ void idk_draw_rectangle2(
     idk_camera_t *cam = idk_window_get_camera(renderer->window);
     idk_mat4_t view;
     idk_camera_get_transform_matrix(cam, &view);
-    idk_shader_set_matrix4(renderer->shader, "u_ModelView", &view);
+    idk_shader_set_matrix4(renderer->uniform.u_ModelView, &view);
 
     glDrawArrays(GL_LINE_LOOP, RECTANGLE_OFFSET, RECTANGLE_VERTEX_COUNT);
     glBindVertexArray(0);
@@ -257,7 +266,7 @@ void idk_draw_rectangle2_fill(
     idk_camera_t *cam = idk_window_get_camera(renderer->window);
     idk_mat4_t view;
     idk_camera_get_transform_matrix(cam, &view);
-    idk_shader_set_matrix4(renderer->shader, "u_ModelView", &view);
+    idk_shader_set_matrix4(renderer->uniform.u_ModelView, &view);
     
     glDrawArrays(
         GL_TRIANGLES, RECTANGLE_FILL_OFFSET, RECTANGLE_FILL_VERTEX_COUNT);
@@ -293,7 +302,7 @@ void idk_draw_circle(
     idk_camera_t *cam = idk_window_get_camera(renderer->window);
     idk_mat4_t view;
     idk_camera_get_transform_matrix(cam, &view);
-    idk_shader_set_matrix4(renderer->shader, "u_ModelView", &view);
+    idk_shader_set_matrix4(renderer->uniform.u_ModelView, &view);
     
     glDrawArrays(GL_LINE_LOOP, CIRCLE_OFFSET, CIRCLE_VERTEX_COUNT);
     glBindVertexArray(0);
@@ -326,7 +335,7 @@ void idk_draw_circle_fill(
     idk_camera_t *cam = idk_window_get_camera(renderer->window);
     idk_mat4_t view;
     idk_camera_get_transform_matrix(cam, &view);
-    idk_shader_set_matrix4(renderer->shader, "u_ModelView", &view);
+    idk_shader_set_matrix4(renderer->uniform.u_ModelView, &view);
     
     glDrawArrays(
         GL_TRIANGLE_FAN, CIRCLE_FILL_OFFSET, CIRCLE_FILL_VERTEX_COUNT);

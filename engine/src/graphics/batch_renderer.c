@@ -3,8 +3,16 @@
 #include <glad/glad.h>
 #include <stdlib.h>
 
+typedef struct idk_batch_shader_uniform
+{
+    int32_t u_Image;
+    int32_t u_Color;
+    int32_t u_ModelView;
+} idk_batch_shader_uniform_t;
+
 typedef struct idk_batch_renderer
 {
+    idk_batch_shader_uniform_t uniform;
     idk_window_t *window;
     const idk_texture_t *texture;
     uint32_t vertexCount;
@@ -23,6 +31,9 @@ idk_batch_renderer_t *idk_batch_renderer_create(
     renderer->texture = texture;
     renderer->vertexCount = vertexCount;
     renderer->vertices = vertices;
+    renderer->uniform.u_Color = -1;
+    renderer->uniform.u_Image = -1;
+    renderer->uniform.u_ModelView = -1;
 
     glGenVertexArrays(1, &renderer->vao);
     glGenBuffers(1, &renderer->vbo);
@@ -97,7 +108,19 @@ void idk_batch_renderer_draw(
     glBindVertexArray(renderer->vao);
 
     idk_shader_use(renderStates.currentShader);
-    idk_shader_set_integer(renderStates.currentShader, "u_Image", 0);
+
+    if (renderer->uniform.u_Image == -1)
+        renderer->uniform.u_Image =
+            glGetUniformLocation(renderStates.currentShader, "u_Image");
+    if (renderer->uniform.u_Color == -1)
+        renderer->uniform.u_Color =
+            glGetUniformLocation(renderStates.currentShader, "u_Color");
+    if (renderer->uniform.u_ModelView == -1)
+        renderer->uniform.u_ModelView =
+            glGetUniformLocation(renderStates.currentShader, "u_ModelView");
+
+    idk_shader_set_integer(renderer->uniform.u_Image, 0);
+    idk_shader_set_float4(renderer->uniform.u_Color, 1.0f, 1.0f, 1.0f, 1.0f);
     
     idk_camera_t *cam = idk_window_get_camera(renderer->window);
     idk_mat4_t view;
@@ -106,8 +129,7 @@ void idk_batch_renderer_draw(
     idk_mat4_t modelView;
     idk_matrix4_combine(view, renderStates.currentMatrix, &modelView);
 
-    idk_shader_set_matrix4(
-        renderStates.currentShader, "u_ModelView", &modelView);
+    idk_shader_set_matrix4(renderer->uniform.u_ModelView, &modelView);
 
     glDrawArrays(GL_TRIANGLES, 0, renderer->vertexCount);
 

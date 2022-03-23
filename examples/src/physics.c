@@ -356,8 +356,6 @@ int main(void)
         idk_window_clear(window);
 
         states.currentMatrix = idk_matrix4_identity();
-        idk_shader_set_color(
-            shader, "u_Color", (idk_color_t){255, 255, 255, 255});
         idk_batch_renderer_draw(br, states);
 
         idk_sprite_renderer_draw(
