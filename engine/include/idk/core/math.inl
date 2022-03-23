@@ -13,7 +13,8 @@ inline float idk_clampf(const float x, const float min, const float max)
         return x;
 }
 
-inline float idk_ring_clampf(const float x, const float min, const float max)
+inline float idk_ring_clampf(
+    const float x, const float min, const float max)
 {
     if (x > max)
         return min + (x - max);
@@ -23,7 +24,8 @@ inline float idk_ring_clampf(const float x, const float min, const float max)
         return x;
 }
 
-inline float idk_lerpf(const float start, const float end, const float t)
+inline float idk_lerpf(
+    const float start, const float end, const float t)
 {
     return start + t * (end - start);
 }

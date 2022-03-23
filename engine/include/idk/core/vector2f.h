@@ -15,6 +15,7 @@ typedef struct idk_vector2f
 
 typedef idk_vector2f_t idk_vec2_t;
 
+inline idk_vec2_t idk_vector2f_create(const float x, const float y);
 inline idk_vec2_t idk_vector2f_add(const idk_vec2_t left, const idk_vec2_t right);
 inline idk_vec2_t idk_vector2f_sub(const idk_vec2_t left, const idk_vec2_t right);
 inline idk_vec2_t idk_vector2f_mul(const idk_vec2_t left, const idk_vec2_t right);

@@ -23,8 +23,8 @@ typedef struct idk_rectangle
     union {
         struct
         {
-            float height;
             float width;
+            float height;
         };
         idk_vec2_t size;
     };

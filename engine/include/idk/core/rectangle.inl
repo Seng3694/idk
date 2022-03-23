@@ -6,13 +6,18 @@
 inline idk_rect_t idk_rectangle_create(
     const float x, const float y, const float width, const float height)
 {
-    return (idk_rect_t){.left = x, .top = y, .width = width, .height = height};
+    idk_rect_t rect;
+    rect.left = x;
+    rect.top = y;
+    rect.width = width;
+    rect.height = height;
+    return rect;
 }
 
 inline idk_rect_t idk_rectangle_create2(
     const float left, const float top, const float right, const float bottom)
 {
-    return (idk_rect_t){.left = left, .top = top, .width = right - left, .height = bottom - top};
+    return idk_rectangle_create(left, top, right - left, bottom - top);
 }
 
 inline float idk_rectangle_right(const idk_rect_t *rect)
@@ -27,7 +32,8 @@ inline float idk_rectangle_bottom(const idk_rect_t *rect)
 
 inline idk_vec2_t idk_rectangle_center(const idk_rect_t *rect)
 {
-    return (idk_vec2_t){rect->left + rect->width / 2.0f, rect->top + rect->height / 2.0f};
+    return idk_vector2f_create(
+        rect->left + rect->width / 2.0f, rect->top + rect->height / 2.0f);
 }
 
 inline void idk_rectangle_set_center(
@@ -39,39 +45,40 @@ inline void idk_rectangle_set_center(
 
 inline idk_vec2_t idk_rectangle_bottomright(const idk_rect_t *rect)
 {
-    return (idk_vec2_t){
-        idk_rectangle_right(rect), idk_rectangle_bottom(rect)};
+    return idk_vector2f_create(
+        idk_rectangle_right(rect), idk_rectangle_bottom(rect));
 }
 
 inline idk_vec2_t idk_rectangle_topright(const idk_rect_t *rect)
 {
-    return (idk_vec2_t){idk_rectangle_right(rect), rect->top};
+    return idk_vector2f_create(idk_rectangle_right(rect), rect->top);
 }
 
 inline idk_vec2_t idk_rectangle_bottomleft(const idk_rect_t *rect)
 {
-    return (idk_vec2_t){rect->left, idk_rectangle_bottom(rect)};
+    return idk_vector2f_create(rect->left, idk_rectangle_bottom(rect));
 }
 
 inline idk_vec2_t idk_rectangle_leftcenter(const idk_rect_t *rect)
 {
-    return (idk_vec2_t){rect->left, rect->top + rect->height / 2.0f};
+    return idk_vector2f_create(rect->left, rect->top + rect->height / 2.0f);
 }
 
 inline idk_vec2_t idk_rectangle_topcenter(const idk_rect_t *rect)
 {
-    return (idk_vec2_t){rect->left + rect->width / 2.0f, rect->top};
+    return idk_vector2f_create(rect->left + rect->width / 2.0f, rect->top);
 }
 
 inline idk_vec2_t idk_rectangle_rightcenter(const idk_rect_t *rect)
 {
-    return (idk_vec2_t){
-        idk_rectangle_right(rect), rect->top + rect->height / 2.0f};
+    return idk_vector2f_create(
+        idk_rectangle_right(rect), rect->top + rect->height / 2.0f);
 }
 
 inline idk_vec2_t idk_rectangle_bottomcenter(const idk_rect_t *rect)
 {
-    return (idk_vec2_t){rect->left + rect->width / 2.0f, idk_rectangle_bottom(rect)};
+    return idk_vector2f_create(
+        rect->left + rect->width / 2.0f, idk_rectangle_bottom(rect));
 }
 
 inline bool idk_rectangle_contains_point(
