@@ -105,7 +105,6 @@ int main(void)
     bool isOnGround = true;
     bool collision = false;
     tile_id collidedTile = 0;
-    float elapsed = 0.0f;
     float rotation = 0.0f;
     idk_sprite_flip_states_t flipStates = IDK_SPRITE_FLIP_NONE;
 
@@ -132,8 +131,6 @@ int main(void)
         float dt = idk_window_get_dt(window);
         if (dt > (1 / 10.0f))
             dt = 1 / 10.0f;
-
-        elapsed += dt;
 
         if (spawned)
         {
