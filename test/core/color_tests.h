@@ -9,7 +9,7 @@
 
 static inline int color_equals(const idk_color_t left, const idk_color_t right)
 {
-    return left.r == right.r & left.g == right.g & left.b == right.b &
+    return left.r == right.r && left.g == right.g && left.b == right.b &&
            left.a == right.a;
 }
 
