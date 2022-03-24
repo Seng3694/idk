@@ -20,6 +20,9 @@ static void idk_mouse_button_callback(
     GLFWwindow *window, int button, int action, int mods);
 static void idk_window_focus_callback(GLFWwindow *window, int focused);
 
+static GLuint idk_blend_equation_to_gl(const idk_blend_equation_t equation);
+static GLuint idk_blend_factor_to_gl(const idk_blend_factor_t factor);
+
 typedef struct idk_window
 {
     idk_camera_t camera;
@@ -103,7 +106,9 @@ idk_window_t *idk_window_create(
 
     glViewport(0, 0, width, height);
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    idk_window_set_blend_mode(window, idk_blend_mode_alpha);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     float clearColor[4];
     idk_color_packed_to_normalized(0x000b1eff, clearColor);
@@ -122,6 +127,24 @@ void idk_window_destroy(idk_window_t *window)
 bool idk_window_is_focused(idk_window_t *window)
 {
     return window->hasFocus;
+}
+
+void idk_window_set_blend_mode(
+    idk_window_t *window, const idk_blend_mode_t blendMode)
+{
+    const GLuint colorSrcFactor = idk_blend_factor_to_gl(blendMode.colorSrcFactor);
+    const GLuint colorDstFactor = idk_blend_factor_to_gl(blendMode.colorDstFactor);
+    const GLuint colorEquation = idk_blend_equation_to_gl(blendMode.colorEquation);
+     
+    const GLuint alphaSrcFactor = idk_blend_factor_to_gl(blendMode.alphaSrcFactor);
+    const GLuint alphaDstFactor = idk_blend_factor_to_gl(blendMode.alphaDstFactor);
+    const GLuint alphaEquation = idk_blend_equation_to_gl(blendMode.alphaEquation);
+
+    /*glBlendFunc(colorSrcFactor, colorDstFactor);
+    glBlendEquation(colorEquation);*/
+    glBlendFuncSeparate(
+        colorSrcFactor, colorDstFactor, alphaSrcFactor, alphaDstFactor);
+    glBlendEquationSeparate(colorEquation, alphaEquation);
 }
 
 void idk_window_set_cursor_visibility(idk_window_t *window, const bool visible)
@@ -418,4 +441,46 @@ static void idk_window_focus_callback(GLFWwindow *window, int focused)
 {
     idk_window_t *idkWindow = (idk_window_t *)glfwGetWindowUserPointer(window);
     idkWindow->hasFocus = focused;
+}
+
+static GLuint idk_blend_equation_to_gl(const idk_blend_equation_t equation)
+{
+    switch (equation)
+    {
+    case IDK_BLEND_EQUATION_ADD:
+        return GL_FUNC_ADD;
+    case IDK_BLEND_EQUATION_SUBTRACT:
+        return GL_FUNC_SUBTRACT;
+    case IDK_BLEND_EQUATION_REVERSE_SUBTRACT:
+        return GL_FUNC_REVERSE_SUBTRACT;
+    }
+    return GL_FUNC_ADD;
+}
+
+static GLuint idk_blend_factor_to_gl(const idk_blend_factor_t factor)
+{
+    switch (factor)
+    {
+    case IDK_BLEND_FACTOR_ZERO:
+        return GL_ZERO;
+    case IDK_BLEND_FACTOR_ONE:
+        return GL_ONE;
+    case IDK_BLEND_FACTOR_SRC_COLOR:
+        return GL_SRC_COLOR;
+    case IDK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR:
+        return GL_ONE_MINUS_SRC_COLOR;
+    case IDK_BLEND_FACTOR_DST_COLOR:
+        return GL_DST_COLOR;
+    case IDK_BLEND_FACTOR_ONE_MINUS_DST_COLOR:
+        return GL_ONE_MINUS_DST_COLOR;
+    case IDK_BLEND_FACTOR_SRC_ALPHA:
+        return GL_SRC_ALPHA;
+    case IDK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA:
+        return GL_ONE_MINUS_SRC_ALPHA;
+    case IDK_BLEND_FACTOR_DST_ALPHA:
+        return GL_DST_ALPHA;
+    case IDK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA:
+        return GL_ONE_MINUS_DST_ALPHA;
+    }
+    return GL_ZERO;
 }

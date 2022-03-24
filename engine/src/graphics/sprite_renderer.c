@@ -12,6 +12,7 @@
 
 typedef struct idk_sprite_shader_uniform
 {
+    idk_shader_t shaderID;
     int32_t u_Image;
     int32_t u_Color;
     int32_t u_ModelView;
@@ -31,6 +32,7 @@ idk_sprite_renderer_t *idk_sprite_renderer_create(idk_window_t* window)
     renderer->window = window;
     renderer->uniform.u_Color = -1;
     renderer->uniform.u_ModelView = -1;
+    renderer->uniform.shaderID = 0;
 
     float vertices[] = {// pos      // tex
                         0.0f, 1.0f, 0.0f, 1.0f, 
@@ -102,6 +104,13 @@ void idk_sprite_renderer_draw(
     idk_matrix4_combine(modelView, renderStates.currentMatrix, &transform);
 
     idk_shader_use(renderStates.currentShader);
+    if (renderer->uniform.shaderID != renderStates.currentShader)
+    {
+        renderer->uniform.shaderID = renderStates.currentShader;
+        renderer->uniform.u_Image = -1;
+        renderer->uniform.u_Color = -1;
+        renderer->uniform.u_ModelView = -1;
+    }
 
     if (renderer->uniform.u_Image == -1)
         renderer->uniform.u_Image =
@@ -116,6 +125,8 @@ void idk_sprite_renderer_draw(
     idk_shader_set_integer(renderer->uniform.u_Image, 0);
     idk_shader_set_matrix4(renderer->uniform.u_ModelView, &transform);
     idk_shader_set_color(renderer->uniform.u_Color, color);
+
+    idk_window_set_blend_mode(renderer->window, renderStates.currentBlendMode);
 
     glActiveTexture(GL_TEXTURE0);
     idk_texture_bind(texture);

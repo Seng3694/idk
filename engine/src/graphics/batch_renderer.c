@@ -5,6 +5,7 @@
 
 typedef struct idk_batch_shader_uniform
 {
+    idk_shader_t shaderID;
     int32_t u_Image;
     int32_t u_Color;
     int32_t u_ModelView;
@@ -34,6 +35,7 @@ idk_batch_renderer_t *idk_batch_renderer_create(
     renderer->uniform.u_Color = -1;
     renderer->uniform.u_Image = -1;
     renderer->uniform.u_ModelView = -1;
+    renderer->uniform.shaderID = 0;
 
     glGenVertexArrays(1, &renderer->vao);
     glGenBuffers(1, &renderer->vbo);
@@ -109,6 +111,14 @@ void idk_batch_renderer_draw(
 
     idk_shader_use(renderStates.currentShader);
 
+    if (renderer->uniform.shaderID != renderStates.currentShader)
+    {
+        renderer->uniform.shaderID = renderStates.currentShader;
+        renderer->uniform.u_Image = -1;
+        renderer->uniform.u_Color = -1;
+        renderer->uniform.u_ModelView = -1;
+    }
+
     if (renderer->uniform.u_Image == -1)
         renderer->uniform.u_Image =
             glGetUniformLocation(renderStates.currentShader, "u_Image");
@@ -130,6 +140,8 @@ void idk_batch_renderer_draw(
     idk_matrix4_combine(view, renderStates.currentMatrix, &modelView);
 
     idk_shader_set_matrix4(renderer->uniform.u_ModelView, &modelView);
+
+    idk_window_set_blend_mode(renderer->window, renderStates.currentBlendMode);
 
     glDrawArrays(GL_TRIANGLES, 0, renderer->vertexCount);
 

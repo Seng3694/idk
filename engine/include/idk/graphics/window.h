@@ -13,6 +13,7 @@ IDK_C_API_BEGIN
 #include "idk/core/keys.h"
 #include "idk/core/mouse_buttons.h"
 #include "idk/core/vector2f.h"
+#include "idk/graphics/blend_mode.h"
 #include "idk/graphics/camera.h"
 
 typedef struct idk_window idk_window_t;
@@ -28,6 +29,9 @@ void idk_window_clear(idk_window_t *window);
 void idk_window_display(idk_window_t *window);
 
 bool idk_window_is_focused(idk_window_t *window);
+
+void idk_window_set_blend_mode(
+    idk_window_t *window, const idk_blend_mode_t blendMode);
 
 void idk_window_set_cursor_visibility(
     idk_window_t *window, const bool visible);

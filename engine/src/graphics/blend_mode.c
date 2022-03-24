@@ -1,0 +1,33 @@
+#include "idk/graphics/blend_mode.h"
+
+const idk_blend_mode_t idk_blend_mode_alpha = { 
+	IDK_BLEND_FACTOR_SRC_ALPHA,
+    IDK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+    IDK_BLEND_EQUATION_ADD,
+    IDK_BLEND_FACTOR_ONE,
+    IDK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,
+    IDK_BLEND_EQUATION_ADD};
+
+const idk_blend_mode_t idk_blend_mode_add = {
+    IDK_BLEND_FACTOR_SRC_ALPHA,
+    IDK_BLEND_FACTOR_ONE,
+    IDK_BLEND_EQUATION_ADD,
+    IDK_BLEND_FACTOR_ONE,
+    IDK_BLEND_FACTOR_ONE,
+    IDK_BLEND_EQUATION_ADD};
+
+const idk_blend_mode_t idk_blend_mode_multiply = {
+    IDK_BLEND_FACTOR_DST_COLOR,
+    IDK_BLEND_FACTOR_ZERO,
+    IDK_BLEND_EQUATION_ADD,
+    IDK_BLEND_FACTOR_DST_COLOR,
+    IDK_BLEND_FACTOR_ZERO,
+    IDK_BLEND_EQUATION_ADD};
+
+const idk_blend_mode_t idk_blend_mode_none = {
+    IDK_BLEND_FACTOR_ONE,
+    IDK_BLEND_FACTOR_ZERO,
+    IDK_BLEND_EQUATION_ADD,
+    IDK_BLEND_FACTOR_ONE,
+    IDK_BLEND_FACTOR_ZERO,
+    IDK_BLEND_EQUATION_ADD};

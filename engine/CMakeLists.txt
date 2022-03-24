@@ -15,6 +15,7 @@ set(HEADER_FILES
 	include/idk/core/vector2f.inl
 	include/idk/core/vertex.h
 	include/idk/graphics/batch_renderer.h
+	include/idk/graphics/blend_mode.h
 	include/idk/graphics/camera.h
 	include/idk/graphics/primitives_renderer.h
 	include/idk/graphics/render_states.h
@@ -34,6 +35,7 @@ set(SOURCE_FILES
 	src/core/rectangle.c
 	src/core/vector2f.c
 	src/graphics/batch_renderer.c
+	src/graphics/blend_mode.c
 	src/graphics/camera.c
 	src/graphics/primitives_renderer.c
 	src/graphics/shader.c
