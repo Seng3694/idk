@@ -131,28 +131,23 @@ void idk_sprite_renderer_draw(
     glActiveTexture(GL_TEXTURE0);
     idk_texture_bind(texture);
 
-    if (textureRect.left != 0 || textureRect.top != 0 ||
-        textureRect.width != texture->width ||
-        textureRect.height != texture->height)
-    {
-        const float l = textureRect.left / texture->width;
-        const float t = textureRect.top / texture->height;
-        const float r = l + (textureRect.width / texture->width);
-        const float b = t + (textureRect.height / texture->height);
+    const float l = textureRect.left / texture->width;
+    const float t = textureRect.top / texture->height;
+    const float r = l + (textureRect.width / texture->width);
+    const float b = t + (textureRect.height / texture->height);
 
-        const float vertices[] = {
-            // pos      // tex
-            0.0f, 1.0f, l, b, 
-            1.0f, 0.0f, r, t, 
-            0.0f, 0.0f, l, t,
+    const float vertices[] = {
+        // pos      // tex
+        0.0f, 1.0f, l, b, 
+        1.0f, 0.0f, r, t, 
+        0.0f, 0.0f, l, t,
 
-            0.0f, 1.0f, l, b, 
-            1.0f, 1.0f, r, b, 
-            1.0f, 0.0f, r, t};
+        0.0f, 1.0f, l, b, 
+        1.0f, 1.0f, r, b, 
+        1.0f, 0.0f, r, t};
 
-        glBindBuffer(GL_ARRAY_BUFFER, renderer->vbo);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-    }
+    glBindBuffer(GL_ARRAY_BUFFER, renderer->vbo);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
     
     glBindVertexArray(renderer->vao);
 
